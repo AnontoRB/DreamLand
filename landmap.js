@@ -40,7 +40,7 @@
     var target = shape.getBounds().pad(1.5);
     if (reduce) map.fitBounds(target, { maxZoom: 19 }); else map.flyToBounds(target, { maxZoom: 19, duration: 1.4 });
     var ft = function (m) { return (m * 3.28084).toFixed(0) + " ft"; };
-    info.innerHTML = "<h3>" + G.format(r.code) + ' <span class="pill ' + a.risk.cls + '">' + a.risk.label + " risk</span></h3>" +
+    info.innerHTML = "<h3>" + G.format(r.code) + ' <span class="pill ' + a.risk.cls + '">' + a.risk.label + "</span></h3>" +
       Land.kv({ "Length": p.len + " m (" + ft(p.len) + ")", "Width": p.wid + " m (" + ft(p.wid) + ")",
         "Area": Math.round(a.sqm) + " sq m", "Area (decimal)": a.dec.toFixed(1), "Land type": p.type, "Zone": p.zone,
         "Place": p.place, "Centre": p.lat.toFixed(6) + ", " + p.lng.toFixed(6) }) +

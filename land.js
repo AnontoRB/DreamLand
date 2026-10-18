@@ -70,21 +70,19 @@
     var arrears = monthly * m, late = arrears * 0.1 * Math.ceil(m / 12);
     var now = new Date(), paidTo = new Date(now.getFullYear(), now.getMonth() - m, 1);
 
-    var score = 0, f = [];
-    if (p.water.km <= 0.5) { score += 40; f.push(["High", "Only " + p.water.km + " km from the " + p.water.name + ". Rivers can change course and erode land, so this plot could be damaged or lost."]); }
-    else if (p.water.km <= 2) { score += 15; f.push(["Medium", p.water.km + " km from the " + p.water.name + ". Check flood and erosion history before buying."]); }
-    if (p.erosion) { score += 15; f.push(["High", "Land erosion has been recorded in this area."]); }
-    if (p.flood) { score += 20; f.push(["Medium", "The area is prone to flooding or storm surge."]); }
+    // RISK: High only when the land has an open court case or is currently on lease.
+    // Anything else (river, flood, tax, price) does not change the risk level.
     var open = p.cases.filter(function (c) { return c.status !== "Closed"; });
-    if (open.length) { score += 25; f.push(["High", "An open court case is linked to this plot (" + open.map(function (c) { return c.id; }).join(", ") + "). Ownership may be disputed."]); }
-    if (m > 12) { score += 10; f.push(["Medium", "More than a year of land tax is unpaid. Arrears usually need to be cleared before a transfer."]); }
-    score = Math.min(100, score);
-    var risk = score < 20 ? { cls: "ok", label: "Low" } : score < 45 ? { cls: "warn", label: "Medium" } : { cls: "bad", label: "High" };
-    if (!f.length) f.push(["Low", "No major risk factors found in our records."]);
+    var leased = !!(p.lease && p.lease.status === "Active");
+    var f = [], why = [];
+    if (open.length) { why.push("an open court case"); f.push(["High", "An open court case is linked to this land (" + open.map(function (c) { return c.id; }).join(", ") + "). Ownership may be disputed."]); }
+    if (leased) { why.push("an active lease"); f.push(["High", "The land is currently on lease (" + p.lease.id + ", leased to " + p.lease.lessee + "). The lessee holds rights over it until the lease ends."]); }
+    var score = why.length ? 100 : 0;
+    var risk = why.length ? { cls: "bad", label: "High risk" } : { cls: "ok", label: "No issues" };
+    if (!f.length) f.push(["Clear", "No court case and no lease is linked to this land."]);
+    var verdict = why.length ? "High risk. We do not recommend this land while it has " + why.join(" and ") + "."
+      : "No issues found. This land has no court case and is not on lease.";
 
-    var verdict = risk.label === "Low" ? "Looks favourable. No major risk factors were found."
-      : risk.label === "Medium" ? "Proceed with caution. Check the risks below before you pay anything."
-      : "High risk. We do not recommend buying until these problems are resolved.";
     // Price is NOT part of the risk score. The price outlook is shown on its own.
     var outlook = change > 0 ? "Prices here may rise about " + change + "% over the next 12 months."
       : change < 0 ? "Prices here may fall about " + Math.abs(change) + "% over the next 12 months."
@@ -114,13 +112,14 @@
     var factors = '<ul class="fx">' + a.factors.map(function (x) { return "<li><b>" + x[0] + ":</b> " + esc(x[1]) + "</li>"; }).join("") + "</ul>";
     var cases = p.cases.length ? '<ul class="fx">' + p.cases.map(function (c) { return "<li><b>" + esc(c.id) + "</b> – " + esc(c.status) + " (next hearing: " + esc(c.next) + ")</li>"; }).join("") + "</ul>"
       : "<p>No court case is linked to this plot.</p>";
-    return '<div class="rep"><h3>' + ft + ' <span class="pill ' + a.risk.cls + '">' + a.risk.label + " risk</span></h3>" +
+    return '<div class="rep"><h3>' + ft + ' <span class="pill ' + a.risk.cls + '">' + a.risk.label + "</span></h3>" +
       '<p class="note">' + esc(p.place) + " · " + esc(p.type) + " · " + a.dec.toFixed(1) + " decimal (" + p.len + " m × " + p.wid + " m)</p>" +
       '<div class="verdict ' + a.risk.cls + '">' + esc(a.verdict) + "</div>" +
       sec("Land price", kv({ "Price per decimal": money(p.ppd), "Current value": money(a.value), "Expected change (12 months)": pct(a.change), "Expected value in 12 months": money(a.future) }) +
         "<p>" + esc(a.outlook) + " What may change the price:</p>" + drivers) +
       sec("Land tax", "<p>" + taxStatus(a) + "</p>" + taxRows(a)) +
       sec("Risk check", factors) + sec("Court cases", cases) +
+      sec("Lease", p.lease ? "<p>" + esc(p.lease.id) + " – " + esc(p.lease.status) + ". Leased to " + esc(p.lease.lessee) + ", " + esc(p.lease.term) + ".</p>" : "<p>No lease or settlement record is linked to this land.</p>") +
       '<p class="rlinks"><a href="maps.html?id=' + code + '">See it on the map</a> · <a href="tax.html?id=' + code + '">Tax details</a></p>' +
       '<p class="note">Demo data and an indicative guide only. It is not financial or legal advice. Confirm with your Upazila Land Office before you pay or sign.</p></div>';
   }
