@@ -1,122 +1,86 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="ড্রিমল্যান্ড: জমি কেনার আগে তথ্য যাচাই করুন।">
-<meta name="color-scheme" content="light">
-<title>ভূমি ম্যাপ ও প্লট – ড্রিমল্যান্ড</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-<link rel="stylesheet" href="styles.css">
-</head>
-<body data-page="maps">
-<header>
-  <div class="wrap bar">
-    <a class="logo" href="index.html">ড্রিম<span>ল্যান্ড</span></a>
-    <nav class="links" aria-label="প্রধান নেভিগেশন"><a href="index.html">হোম</a>
-      <span class="has-dd"><a href="about.html" aria-haspopup="true">আমাদের সম্পর্কে</a>
-        <div class="menu">
-          <a href="about.html#objective">উদ্দেশ্য</a>
-          <a href="about.html#how-to-use">ওয়েবসাইট ব্যবহারের নিয়ম</a>
-          <a href="about.html#benefits">ওয়েবসাইটের সুবিধাসমূহ</a>
-          <a href="about.html#laws">আইন ও বিধিমালা</a>
-          <a href="about.html#fees">ভূমি সেবার ফি</a>
-        </div></span>
-      <a href="tel:1232123">১২৩২১২৩</a></nav>
-    <button class="login" type="button" id="loginBtn">লগইন</button>
-  </div>
-</header>
-<div class="progress" id="progress"></div>
+/* ==========================================================================
+   Dreamland – landmap.js  (Land Maps page)
+   A real map of Bangladesh (OpenStreetMap + satellite, via Leaflet).
+   Every registered building is outlined on the map: red = High risk
+   (open court case or active lease), green = No issues.
+   Click a building, or search its UniqueID, to see its size and details.
+   Needs leaflet.js, geoid.js and land.js loaded first.
+   ========================================================================== */
+(function () {
+  "use strict";
+  var box = document.getElementById("leafMap");
+  if (!box) return;
+  if (!window.L || !window.Land) { box.innerHTML = '<p class="err" style="padding:1rem">The map could not load. Check your internet connection and refresh.</p>'; return; }
 
-<section class="phero"><div class="wrap"><nav class="crumb" aria-label="ব্রেডক্রাম্ব"><a href="index.html">হোম</a> / ভূমি ম্যাপ</nav>
-<h1>ভূমি ম্যাপ ও প্লট অবস্থান</h1><p>জমির অবস্থান, সীমানা এবং ঝুঁকির মাত্রা সরাসরি ম্যাপে দেখুন।</p></div></section>
-<main class="wrap inner">
+  var Land = window.Land, G = window.GeoID, info = document.getElementById("plotInfo");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var HINT = "Click a marked building, or enter a UniqueID, to see its details.";
 
-<div class="panel tool reveal"><h2>প্লট বা ইউনিক আইডি দিয়ে খুঁজুন</h2>
-<p class="hint">ম্যাপে দেখতে ইউনিক আইডি বা প্লট নম্বর লিখুন। যেমন: <button type="button" class="ex" data-fill="0GIG-J8G5">0GIG-J8G5</button> <button type="button" class="ex" data-fill="8UPX-U9D2">8UPX-U9D2</button></p>
-<form id="mapIdForm" class="row" novalidate><label class="grow">ইউনিক আইডি বা প্লট নম্বর<input id="mapIdIn" placeholder="যেমন: 0GIG-J8G5" maxlength="12" autocomplete="off"></label><button class="pbtn" type="submit">খুঁজুন</button><button type="button" id="mapReset" class="pbtn" style="background:#e8f5ef;color:var(--sky)">রিসেট</button></form>
-<div class="mapwrap"><div id="leafMap"></div><div id="plotInfo" class="panel" style="margin:0">কোনো ভবন বা প্লটে ক্লিক করুন অথবা ইউনিক আইডি দিয়ে বিস্তারিত দেখুন।</div></div>
-</div>
-</main>
+  var street = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxNativeZoom: 19, maxZoom: 20, attribution: "&copy; OpenStreetMap contributors" });
+  var sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxNativeZoom: 18, maxZoom: 20, attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics" });
+  var map = L.map(box, { layers: [street], minZoom: 6, maxBounds: [[19.5, 87], [27.5, 93.8]], maxBoundsViscosity: 0.8 });
+  L.control.layers({ "Street map": street, "Satellite": sat }, null, { collapsed: true }).addTo(map);
 
-<footer>
-  <div class="wrap">
-    <div class="ft">
-      <div>
-        <h4>পরিকল্পনা ও বাস্তবায়নে</h4>
-        <div class="emb">
-          <div><b>প্রোক্রাস্টিনেটরস</b><p>কাল নয়, আজই সমাধান।</p></div>
-        </div>
-      </div>
-      <div>
-        <h4>সহায়তা ও নীতিমালা</h4>
-        <ul>
-          <li><a href="#">গোপনীয়তা নীতি</a></li>
-          <li><a href="#">সাধারণ জিজ্ঞাসা</a></li>
-        </ul>
-      </div>
-      <div class="help">
-        <h4>সাহায্য প্রয়োজন?</h4>
-        <a class="hb" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=261-35-204@diu.edu.bd" target="_blank" rel="noopener noreferrer">261-35-204@diu.edu.bd</a>
-        <a class="hn" href="tel:978235943">৯৭৮২৩৫৯৪৩</a>
-      </div>
-      <div>
-        <h4>অ্যাপ ডাউনলোড করুন</h4>
-        <a class="store" href="#"><svg class="bi bi-light" viewBox="0 0 24 24" aria-hidden="true"><path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"/></svg><span><small>গুগল প্লে স্টোর</small><b>Google Play</b></span></a>
-        <a class="store" href="#"><svg class="bi bi-light" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg><span><small>অ্যাপল স্টোর</small><b>App Store</b></span></a>
-        </div>
-      <div>
-        <h4>সোশ্যাল মিডিয়া</h4>
-        <div class="soc">
-          <a href="#" aria-label="Facebook"><svg class="bi bi-fb" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a>
-          <a href="#" aria-label="X"><svg class="bi bi-x" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg></a>
-          <a href="#" aria-label="Instagram"><svg class="bi bi-ig" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="ig" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#FEDA77"/><stop offset=".3" stop-color="#F58529"/><stop offset=".55" stop-color="#DD2A7B"/><stop offset=".8" stop-color="#8134AF"/><stop offset="1" stop-color="#515BD4"/></linearGradient></defs><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></a>
-          <a href="#" aria-label="YouTube"><svg class="bi bi-yt" viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-        </div>
-      </div>
-    </div>
-    <div class="copy">টিম প্রোক্রাস্টিনেটরস দ্বারা তৈরি।</div>
-  </div>
-</footer>
+  /* legend */
+  var legend = L.control({ position: "bottomleft" });
+  legend.onAdd = function () {
+    var d = L.DomUtil.create("div", "maplegend");
+    d.innerHTML = '<div><i style="background:#ee5a70"></i>High risk (case or lease)</div><div><i style="background:#2e9d77"></i>No issues</div>';
+    return d;
+  };
+  legend.addTo(map);
 
-<div class="modal" id="loginModal" hidden>
-  <div class="mbox" role="dialog" aria-modal="true" aria-labelledby="lt">
-    <button class="x" type="button" aria-label="বন্ধ করুন" data-close>&times;</button>
-    <h3 id="lt">লগইন</h3>
-    <form id="lf1" novalidate>
-      <p class="ok" id="lmsg"></p>
-      <label>ইমেইল<input type="email" id="lemail" placeholder="you@example.com" autocomplete="email"></label>
-      <label>পাসওয়ার্ড<input type="password" id="lpass" autocomplete="current-password"></label>
-      <p class="rt"><button type="button" class="lnk" data-go="forgot">পাসওয়ার্ড ভুলে গেছেন?</button></p>
-      <p class="err" id="lerr1"></p><button class="pbtn" type="submit">লগইন</button>
-      <p class="alt">একাউন্ট নেই? <button type="button" class="lnk" data-go="signup">নতুন একাউন্ট খুলুন</button></p>
-    </form>
-    <form id="lfS" hidden novalidate>
-      <label>পূর্ণ নাম<input id="sname" autocomplete="name" maxlength="60"></label>
-      <label>ইমেইল<input type="email" id="semail" autocomplete="email"></label>
-      <label>পাসওয়ার্ড (কমপক্ষে ৮ অক্ষর)<input type="password" id="spass" autocomplete="new-password"></label>
-      <label>পাসওয়ার্ড নিশ্চিত করুন<input type="password" id="spass2" autocomplete="new-password"></label>
-      <p class="err" id="lerrS"></p><button class="pbtn" type="submit">একাউন্ট তৈরি করুন</button>
-      <p class="alt">পূর্বেই একাউন্ট আছে? <button type="button" class="lnk" data-go="login">লগইন করুন</button></p>
-    </form>
-    <form id="lfF" hidden novalidate>
-      <p>আপনার নিবন্ধিত ইমেইল লিখুন, আমরা রিসেট কোড পাঠাব।</p>
-      <label>ইমেইল<input type="email" id="femail" autocomplete="email"></label>
-      <div id="frest" hidden>
-        <p id="fhint"></p>
-        <label>রিসেট কোড<input id="fcode" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></label>
-        <label>নতুন পাসওয়ার্ড (কমপক্ষে ৮ অক্ষর)<input type="password" id="fpass" autocomplete="new-password"></label>
-      </div>
-      <p class="err" id="lerrF"></p><button class="pbtn" type="submit" id="fbtn">কোড পাঠান</button>
-      <p class="alt"><button type="button" class="lnk" data-go="login">লগইনে ফিরে যান</button></p>
-    </form>
-    <div id="lf3" hidden><p>লগইন আছেন: <b id="lwho"></b></p><button class="pbtn" id="llogout" type="button">লগআউট</button></div>
-  </div>
-</div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="site.js"></script>
-<script src="geoid.js"></script>
-<script src="land.js"></script>
-<script src="landmap.js"></script>
-</body>
-</html>
+  /* one outline per registered building */
+  var shapes = {}, current = null;
+  function colour(p) { return Land.analyze(p).risk.cls === "bad" ? "#ee5a70" : "#2e9d77"; }
+  function style(p, on) { var c = colour(p); return { color: c, weight: on ? 4 : 2, fillColor: c, fillOpacity: on ? 0.55 : 0.3 }; }
+  function hoverTip(poly, p) { poly.unbindTooltip(); poly.bindTooltip(G.format(p.id), { sticky: true }); }
+
+  Land.list.forEach(function (p) {
+    var poly = L.polygon(p.poly, style(p, false)).addTo(map);
+    hoverTip(poly, p);
+    poly.on("click", function () { show(p.id); });
+    shapes[p.id] = poly;
+  });
+  var HOME = L.featureGroup(Land.list.map(function (p) { return shapes[p.id]; })).getBounds().pad(0.25);
+  map.fitBounds(HOME, { maxZoom: 18 });
+
+  function deselect() {
+    if (!current) return;
+    var p = Land.parcels[current];
+    shapes[current].setStyle(style(p, false)); hoverTip(shapes[current], p);
+    current = null;
+  }
+
+  function show(raw) {
+    var r = Land.lookup(raw);
+    if (r.status !== "ok") { info.innerHTML = Land.problemHTML(r); return; }
+    var p = r.p, a = Land.analyze(p), poly = shapes[r.code];
+    deselect();
+    current = r.code;
+    poly.setStyle(style(p, true)); poly.bringToFront();
+    poly.unbindTooltip();
+    poly.bindTooltip(G.format(r.code) + " · " + p.len + " m × " + p.wid + " m", { permanent: true, direction: "top", offset: [0, -4] });
+    var target = poly.getBounds().pad(1.5);
+    if (reduce) map.fitBounds(target, { maxZoom: 19 }); else map.flyToBounds(target, { maxZoom: 19, duration: 1.2 });
+
+    var ft = function (m) { return (m * 3.28084).toFixed(0) + " ft"; };
+    var cases = p.cases.length ? p.cases.map(function (c) { return c.id + " (" + c.status + ")"; }).join(", ") : "None";
+    var lease = p.lease ? p.lease.id + " (" + p.lease.status + ")" : "None";
+    info.innerHTML = "<h3>" + G.format(r.code) + ' <span class="pill ' + a.risk.cls + '">' + a.risk.label + "</span></h3>" +
+      '<p class="note">' + Land.esc(a.verdict) + "</p>" +
+      Land.kv({ "Length": p.len + " m (" + ft(p.len) + ")", "Width": p.wid + " m (" + ft(p.wid) + ")",
+        "Area": Math.round(a.sqm) + " sq m", "Area (decimal)": a.dec.toFixed(1), "Land type": p.type, "Zone": p.zone,
+        "Court case": cases, "Lease": lease,
+        "Land tax": a.tax.months ? a.tax.months + " months unpaid" : "Paid up to date",
+        "Place": p.place, "Centre": p.lat.toFixed(6) + ", " + p.lng.toFixed(6) }) +
+      '<p class="rlinks"><a href="tax.html?id=' + r.code + '">Tax details</a></p>';
+  }
+
+  document.getElementById("mapIdForm").addEventListener("submit", function (e) { e.preventDefault(); show(document.getElementById("mapIdIn").value); });
+  document.getElementById("mapReset").addEventListener("click", function () {
+    deselect(); map.fitBounds(HOME, { maxZoom: 18 }); info.textContent = HINT;
+  });
+  var qid = new URLSearchParams(location.search).get("id");
+  if (qid) { document.getElementById("mapIdIn").value = qid; show(qid); }
+})();
