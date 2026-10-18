@@ -4,7 +4,7 @@
      1. Settings (edit scroll targets here)
      2. Spotlight carousel + today's date
      3. Features list, filter chips and cards
-     4. Reveal on scroll, progress bars, counters
+     4. Reveal on scroll
      5. Click-to-scroll (buttons move you to a section)
    ========================================================================== */
 (function () {
@@ -19,7 +19,7 @@
      You can also add data-scroll-to="#some-id" to ANY element in the HTML.
      ------------------------------------------------------------------ */
   var SCROLL = {
-    login: "#about",     // the Login button in the header
+    login: "#projects",  // the Login button in the header
     chip: "#projects"    // the filter chips (All / Services / Records / ...)
   };
 
@@ -166,27 +166,13 @@
   draw();
 
   /* ------------------------------------------------------------------
-     4. REVEAL ON SCROLL, PROGRESS BARS, COUNTERS
+     4. REVEAL ON SCROLL
      ------------------------------------------------------------------ */
-  function count(el) {
-    var to = +el.dataset.count,
-      s = null;
-    if (reduce) { el.textContent = to; return; }
-    (function step(t) {
-      if (!s) s = t;
-      var p = Math.min((t - s) / 1200, 1);
-      el.textContent = Math.round(to * p);
-      if (p < 1) requestAnimationFrame(step);
-    })(performance.now());
-  }
-
   var io = new IntersectionObserver(function (es) {
     es.forEach(function (e) {
       if (!e.isIntersecting) return;
       var el = e.target;
       el.classList.add("in");
-      [].forEach.call(el.querySelectorAll(".fill"), function (f) { f.style.width = f.dataset.level + "%"; });
-      [].forEach.call(el.querySelectorAll("[data-count]"), count);
       io.unobserve(el);
     });
   }, { threshold: 0.2 });

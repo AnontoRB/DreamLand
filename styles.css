@@ -1,7 +1,6 @@
 /* ==========================================================================
    Dreamland – styles.css
-   Sections: 1 Theme & base · 2 Header · 3 Spotlight · 4 Features · 5 About & progress
-             6 Footer · 7 Scroll reveal · 8 Responsive & reduced motion
+   Sections: 1 Theme & base · 2 Header · 3 Spotlight · 4 Features · 5 Footer · 6 Scroll reveal · 7 Responsive & reduced motion
    ========================================================================== */
 
 /* 1. THEME & BASE */
@@ -69,21 +68,9 @@ h2.t{font:700 1.7rem Georgia,serif;margin:0;border-left:5px solid var(--accent);
 .card p{max-width:calc(100% - 5.5rem);margin:.4rem 0 0;font-size:1.05rem;max-height:0;opacity:0;overflow:hidden;transition:max-height .35s,opacity .35s}
 .card:hover p,.card:focus-visible p{max-height:8rem;opacity:1}
 .empty{color:var(--muted);padding:1rem 0}
-/* 5. ABOUT + PROGRESS BARS */
-.two{display:grid;gap:2rem;grid-template-columns:1fr 1fr}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:1rem;padding:1.5rem}
-.panel h3{margin:0 0 .8rem;font-size:1.15rem}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1.2rem}
-.stat{text-align:center;background:var(--bg);border:1px solid var(--line);border-radius:.8rem;padding:.8rem .3rem}
-.stat b{display:block;font:700 1.8rem Georgia,serif;color:var(--accent)}
-.stat small{color:var(--muted)}
-.bar2{margin-bottom:1rem}
-.bar2 div:first-child{display:flex;justify-content:space-between;font-size:.95rem;margin-bottom:.3rem}
-.track{height:.6rem;background:var(--line);border-radius:999px;overflow:hidden}
-.fill{height:100%;width:0;background:linear-gradient(90deg,#006a4e,#2fae85);border-radius:999px;transition:width 1.2s cubic-bezier(.2,.7,.2,1)}
-/* 6. FOOTER */
-footer{margin-top:3rem;background:#00362a;color:#e6f4ee;border-top:4px solid #f42a41;font-size:.9rem}
-.ft{display:grid;grid-template-columns:minmax(12rem,1.25fr) minmax(9rem,1fr) minmax(13rem,1.35fr) minmax(10rem,1fr) minmax(8rem,.8fr);gap:1.5rem;align-items:start;padding:3rem 0 2.5rem;overflow:visible;min-width:0}
+/* 5. FOOTER */
+footer{margin-top:1.5rem;background:#00362a;color:#e6f4ee;border-top:4px solid #f42a41;font-size:.9rem}
+.ft{display:grid;grid-template-columns:minmax(12rem,1.25fr) minmax(9rem,1fr) minmax(13rem,1.35fr) minmax(10rem,1fr) minmax(8rem,.8fr);gap:1.5rem;align-items:start;padding:1.75rem 0 1.25rem;overflow:visible;min-width:0}
 .ft>div{min-width:0;max-width:100%}
 .ft>div:first-child{min-width:0}
 .ft>div:nth-child(3){min-width:0}
@@ -96,9 +83,9 @@ footer{margin-top:3rem;background:#00362a;color:#e6f4ee;border-top:4px solid #f4
 .help p{margin:0 0 1rem;line-height:1.5}
 .ft a.hb{display:inline-block;background:#d4213a;color:#fff;font-weight:700;padding:.5rem 1rem;border-radius:999px;text-decoration:none;white-space:nowrap}
 .ft a.hb:hover{background:#f42a41;text-decoration:none}
-.ft h4{margin:0 0 1.25rem;font:700 .95rem Georgia,serif;color:#fff;white-space:nowrap}
+.ft h4{margin:0 0 .75rem;font:700 .95rem Georgia,serif;color:#fff;white-space:nowrap}
 .ft h4.gap{margin-top:2rem}
-.ft ul{list-style:none;margin:0;padding:0;display:grid;gap:.85rem}
+.ft ul{list-style:none;margin:0;padding:0;display:grid;gap:.55rem}
 .ft a{color:#e6f4ee;text-decoration:none}
 .ft a:hover{color:#fff;text-decoration:underline}
 .ft a:focus-visible{outline-color:#fff}
@@ -124,7 +111,7 @@ footer{margin-top:3rem;background:#00362a;color:#e6f4ee;border-top:4px solid #f4
 .partners p{margin:0;font-weight:700;color:#006a4e}
 .partners ul.pl{display:flex;flex-wrap:wrap;gap:.4rem 1.6rem;list-style:none;margin:0;padding:0}
 .partners li{font-weight:600}
-.copy{margin-top:1.6rem;border-top:1px solid rgba(255,255,255,.2);padding:1.2rem 0 1.6rem;text-align:center;color:#bcd8cc;font-size:.9rem}
+.copy{margin-top:.5rem;border-top:1px solid rgba(255,255,255,.2);padding:.8rem 0 1rem;text-align:center;color:#bcd8cc;font-size:.9rem}
 /* footer icon colours (were inline style="" attributes in the HTML) */
 .ft svg.bi-light{fill:#fff}
 .ft svg.bi-fb{fill:#0866FF}
@@ -132,9 +119,9 @@ footer{margin-top:3rem;background:#00362a;color:#e6f4ee;border-top:4px solid #f4
 .ft svg.bi-yt{fill:#FF0000}
 .ft svg.bi-ig path{fill:url(#ig)}
 
-/* 7. SCROLL REVEAL */
+/* 6. SCROLL REVEAL */
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
 .reveal.in{opacity:1;transform:none}
-/* 8. RESPONSIVE + REDUCED MOTION */
-@media (max-width:720px){.bar{grid-template-columns:auto 1fr auto;gap:.5rem}.links{grid-column:2;gap:.7rem;font-size:.8rem}.logo{font-size:1.1rem}.two{grid-template-columns:1fr}.spot{aspect-ratio:16/10}.sbar input{font-size:.75rem}.date{font-size:.85rem;right:.6rem}}
+/* 7. RESPONSIVE + REDUCED MOTION */
+@media (max-width:720px){.bar{grid-template-columns:auto 1fr auto;gap:.5rem}.links{grid-column:2;gap:.7rem;font-size:.8rem}.logo{font-size:1.1rem}.spot{aspect-ratio:16/10}.sbar input{font-size:.75rem}.date{font-size:.85rem;right:.6rem}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
