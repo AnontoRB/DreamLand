@@ -52,7 +52,7 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:va
 .sbar input{all:unset;flex:1;min-width:0;padding:.65rem 0;color:#fff;font-size:1rem;text-overflow:ellipsis}
 .sbar input::placeholder{color:#fff;opacity:1;text-overflow:ellipsis}
 .sbar:focus-within{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.35)}
-.date{position:absolute;right:1rem;bottom:.6rem;z-index:3;padding:.3rem .85rem;border-radius:999px;background:rgba(0,40,28,.32);border:1px solid rgba(255,255,255,.6);backdrop-filter:blur(8px);color:#fff;font-size:.85rem;white-space:nowrap}
+.date{position:absolute;right:1rem;bottom:.3rem;z-index:3;padding:.4rem 1.1rem;border-radius:999px;background:rgba(0,40,28,.32);backdrop-filter:blur(8px);color:#fff;font-size:1.05rem;white-space:nowrap}
 /* sections */
 section{padding:2.5rem 0 0}
 .head{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.2rem}
@@ -62,8 +62,11 @@ h2.t{font:700 1.7rem Georgia,serif;margin:0;border-left:5px solid var(--accent);
 .chip:hover{border-color:var(--sky)}
 .chip[aria-pressed="true"]{background:var(--sky);color:#fff;border-color:var(--sky);font-weight:600}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(10.5rem,1fr));gap:1rem}
-.card{position:relative;aspect-ratio:2/3;border-radius:.9rem;overflow:hidden;background:linear-gradient(160deg,hsl(var(--h) 80% 36%),hsl(var(--h) 80% 16%));color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:.9rem;transition:transform .3s,box-shadow .3s;cursor:default}
-.card:hover,.card:focus-visible{transform:translateY(-6px);box-shadow:0 14px 30px rgba(0,106,78,.35)}
+.card{position:relative;aspect-ratio:2/3;border-radius:.9rem;overflow:hidden;background:linear-gradient(160deg,hsl(164 100% 22%),hsl(164 100% 12%));color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:.9rem;transition:transform .3s,box-shadow .3s;cursor:default}
+.card:hover,.card:focus-visible{transform:translateY(-6px);box-shadow:0 14px 30px rgba(212,33,58,.35)}
+.card::before{content:"";position:absolute;inset:0;background:linear-gradient(160deg,#f42a41,#8c0f1f);opacity:0;transition:opacity .3s}
+.card>*{position:relative}
+.card:hover::before,.card:focus-visible::before{opacity:1}
 .card .tag{position:absolute;top:.7rem;left:.7rem;background:rgba(0,0,0,.35);padding:.1rem .6rem;border-radius:999px;font-size:.78rem}
 .card h3{margin:0;font-size:1.1rem;line-height:1.2}
 .card p{margin:.4rem 0 0;font-size:.85rem;max-height:0;opacity:0;overflow:hidden;transition:max-height .35s,opacity .35s}
@@ -87,7 +90,7 @@ h2.t{font:700 1.7rem Georgia,serif;margin:0;border-left:5px solid var(--accent);
 footer{padding:2.5rem 0 3rem;color:var(--muted);text-align:center;font-size:.9rem}
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
 .reveal.in{opacity:1;transform:none}
-@media (max-width:720px){.links{display:none}.two{grid-template-columns:1fr}.spot{aspect-ratio:16/10}.sbar input{font-size:.75rem}.date{font-size:.72rem;right:.6rem}}
+@media (max-width:720px){.links{display:none}.two{grid-template-columns:1fr}.spot{aspect-ratio:16/10}.sbar input{font-size:.75rem}.date{font-size:.85rem;right:.6rem}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
 </style>
 </head>
@@ -120,7 +123,7 @@ footer{padding:2.5rem 0 3rem;color:var(--muted);text-align:center;font-size:.9re
       <div class="chips" id="chips"></div>
     </div>
     <div class="grid" id="grid"></div>
-    <p class="empty" id="empty" hidden>No features in this group yet. Select the group again to see all features.</p>
+    <p class="empty" id="empty" hidden>No features in this group yet. Choose All to see every feature.</p>
   </section>
 
   <section id="about" class="reveal">
@@ -184,15 +187,15 @@ var projects=[
  {t:"Apply for UniqueID",d:"Apply for your unique ID.",tag:"Services",h:355},
  {t:"FAQ",d:"Answers to common questions.",tag:"Legal & Help",h:160}
 ];
-var tags=[],state={tag:"",q:""};
+var tags=["All"],state={tag:"All",q:""};
 projects.forEach(function(p){if(tags.indexOf(p.tag)<0)tags.push(p.tag)});
 var chips=document.getElementById("chips"),grid=document.getElementById("grid"),empty=document.getElementById("empty");
-tags.forEach(function(t){var b=document.createElement("button");b.type="button";b.className="chip";b.textContent=t;b.setAttribute("aria-pressed","false");
- b.addEventListener("click",function(){state.tag=(state.tag===t)?"":t;[].forEach.call(chips.children,function(c){c.setAttribute("aria-pressed",c===b&&state.tag===t)});draw()});chips.appendChild(b)});
+tags.forEach(function(t){var b=document.createElement("button");b.type="button";b.className="chip";b.textContent=t;b.setAttribute("aria-pressed",t==="All");
+ b.addEventListener("click",function(){state.tag=t;[].forEach.call(chips.children,function(c){c.setAttribute("aria-pressed",c===b)});draw()});chips.appendChild(b)});
 function draw(){
   grid.textContent="";var n=0;
   projects.forEach(function(p){
-    if(state.tag&&p.tag!==state.tag)return;
+    if(state.tag!=="All"&&p.tag!==state.tag)return;
     if(state.q&&(p.t+" "+p.d+" "+p.tag).toLowerCase().indexOf(state.q)<0)return;
     var c=document.createElement("article");c.className="card";c.tabIndex=0;c.style.setProperty("--h",p.h);
     var g=document.createElement("span");g.className="tag";g.textContent=p.tag;
