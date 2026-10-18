@@ -14,12 +14,9 @@
 
   /* ------------------------------------------------------------------
      1. SETTINGS
-     Which section each kind of button scrolls to. Change the ids freely,
-     or set a value to "" to turn that button's scrolling off.
-     You can also add data-scroll-to="#some-id" to ANY element in the HTML.
      ------------------------------------------------------------------ */
   var SCROLL = {
-    chip: "#projects"    // the filter chips (All / Services / Records / ...)
+    chip: "#projects"    // the filter chips
   };
 
   /* ------------------------------------------------------------------
@@ -64,26 +61,26 @@
 
   var dEl = document.getElementById("today"),
     now = new Date();
-  dEl.textContent = now.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  dEl.textContent = now.toLocaleDateString("bn-BD", { day: "numeric", month: "long", year: "numeric" });
   dEl.setAttribute(
     "datetime",
     now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(now.getDate()).padStart(2, "0")
   );
 
   /* ------------------------------------------------------------------
-     3. FEATURES (edit this list to add / change cards)
+     3. FEATURES (Bangla Translated)
      ------------------------------------------------------------------ */
   var projects = [
-    { t: "Apply for UniqueID", d: "Apply for your unique ID.", tag: "Services", h: 355, href: "unique-id.html", hot: true },
-    { t: "Lease & Settlement", d: "Details of leased and settled land.", tag: "Services", h: 355, href: "lease.html" },
-    { t: "Land Tax", d: "Check land tax details and dues.", tag: "Services", h: 350, href: "tax.html" },
-    { t: "Land Maps", d: "View plot locations and boundaries.", tag: "Records", h: 358, href: "maps.html" },
-    { t: "Land Cases", d: "Check court cases linked to a plot.", tag: "Legal & Help", h: 164, href: "cases.html" },
-    { t: "FAQ", d: "Answers to common questions.", tag: "Legal & Help", h: 160, href: "faq.html" }
+    { t: "ইউনিক আইডির আবেদন", d: "আপনার অনন্য আইডির জন্য আবেদন করুন।", tag: "সেবাসমূহ", h: 355, href: "unique-id.html", hot: true },
+    { t: "ইজারা ও বন্দোবস্ত", d: "ইজারা ও বন্দোবস্তকৃত জমির বিবরণ।", tag: "সেবাসমূহ", h: 355, href: "lease.html" },
+    { t: "ভূমি কর", d: "ভূমি উন্নয়ন করের হিসাব ও বকেয়া দেখুন।", tag: "সেবাসমূহ", h: 350, href: "tax.html" },
+    { t: "ভূমি ম্যাপ", d: "প্লটের অবস্থান ও সীমানা দেখুন।", tag: "রেকর্ডসমূহ", h: 358, href: "maps.html" },
+    { t: "ভূমির মামলাসমূহ", d: "প্লটের সাথে যুক্ত আদালতের মামলা চেক করুন।", tag: "আইন ও সহায়তা", h: 164, href: "cases.html" },
+    { t: "সাধারণ জিজ্ঞাসা", d: "সাধারণ প্রশ্নের উত্তর ও সহায়িকা।", tag: "আইন ও সহায়তা", h: 160, href: "faq.html" }
   ];
 
-  var tags = ["All"],
-    state = { tag: "All", q: "" };
+  var tags = ["সবকটি"],
+    state = { tag: "সবকটি", q: "" };
   projects.forEach(function (p) {
     if (tags.indexOf(p.tag) < 0) tags.push(p.tag);
   });
@@ -97,7 +94,7 @@
     b.type = "button";
     b.className = "chip";
     b.textContent = t;
-    b.setAttribute("aria-pressed", t === "All");
+    b.setAttribute("aria-pressed", t === "সবকটি");
     if (SCROLL.chip) b.setAttribute("data-scroll-to", SCROLL.chip);
     b.addEventListener("click", function () {
       state.tag = t;
@@ -109,12 +106,12 @@
 
   var NS = "http://www.w3.org/2000/svg";
   var ICONS = {
-    "Lease & Settlement": ["M12 15a4 4 0 1 1-8 0 4 4 0 0 1 8 0z", "M11 12l9-9M16 7l3 3M14 9l2 2"],
-    "Land Tax": ["M19 5L5 19", "M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z", "M16.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"],
-    "Land Maps": ["M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z", "M9 3v15M15 6v15"],
-    "Land Cases": ["M12 3v18M7 21h10M5 7h14", "M5 7l-3 7a3 3 0 0 0 6 0L5 7z", "M19 7l-3 7a3 3 0 0 0 6 0l-3-7z"],
-    "Apply for UniqueID": ["M3 6h18v12H3z", "M7.5 11a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z", "M5.5 16c.5-2 4.5-2 5 0", "M13 10h5M13 14h5"],
-    "FAQ": ["M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z", "M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7", "M12 17h.01"]
+    "ইজারা ও বন্দোবস্ত": ["M12 15a4 4 0 1 1-8 0 4 4 0 0 1 8 0z", "M11 12l9-9M16 7l3 3M14 9l2 2"],
+    "ভূমি কর": ["M19 5L5 19", "M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z", "M16.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"],
+    "ভূমি ম্যাপ": ["M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z", "M9 3v15M15 6v15"],
+    "ভূমির মামলাসমূহ": ["M12 3v18M7 21h10M5 7h14", "M5 7l-3 7a3 3 0 0 0 6 0L5 7z", "M19 7l-3 7a3 3 0 0 0 6 0l-3-7z"],
+    "ইউনিক আইডির আবেদন": ["M3 6h18v12H3z", "M7.5 11a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z", "M5.5 16c.5-2 4.5-2 5 0", "M13 10h5M13 14h5"],
+    "সাধারণ জিজ্ঞাসা": ["M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z", "M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7", "M12 17h.01"]
   };
 
   function icon(name) {
@@ -134,7 +131,7 @@
     grid.textContent = "";
     var n = 0;
     projects.forEach(function (p) {
-      if (state.tag !== "All" && p.tag !== state.tag) return;
+      if (state.tag !== "সবকটি" && p.tag !== state.tag) return;
       if (state.q && (p.t + " " + p.d + " " + p.tag).toLowerCase().indexOf(state.q) < 0) return;
       var c = document.createElement(p.href ? "a" : "article");
       if (p.href) c.href = p.href;
@@ -176,9 +173,6 @@
 
   /* ------------------------------------------------------------------
      5. CLICK-TO-SCROLL
-     Any element with data-scroll-to="#id" smoothly scrolls to that
-     element when clicked. The sticky header offset is handled in CSS
-     (scroll-padding-top), so the target is never hidden under it.
      ------------------------------------------------------------------ */
   var loginBtn = document.querySelector(".login");
   if (loginBtn && SCROLL.login) loginBtn.setAttribute("data-scroll-to", SCROLL.login);

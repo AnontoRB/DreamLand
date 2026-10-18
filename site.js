@@ -1,7 +1,5 @@
 /* ==========================================================================
-   Dreamland – site.js (loaded on every page)
-   Sections: 1 Helpers · 2 Header effects · 3 Phone links · 4 Login window (email + password)
-             5 Reveal · 6 Page tools (lease, tax, maps, cases, faq, uid)
+   Dreamland – site.js (Bangla Version)
    ========================================================================== */
 (function () {
   "use strict";
@@ -15,10 +13,10 @@
   var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function dl(o) { return '<dl class="kv">' + Object.keys(o).map(function (k) { return "<div><dt>" + esc(k) + "</dt><dd>" + esc(o[k]) + "</dd></div>"; }).join("") + "</dl>"; }
-  function money(n) { return "৳ " + n.toLocaleString("en-BD", { maximumFractionDigits: 2 }); }
+  function money(n) { return "৳ " + n.toLocaleString("bn-BD", { maximumFractionDigits: 2 }); }
   function onSubmit(id, fn) { var f = document.getElementById(id); if (f) f.addEventListener("submit", function (e) { e.preventDefault(); fn(f); }); }
 
-  /* 2. HEADER EFFECTS: shadow when scrolled + reading progress bar */
+  /* 2. HEADER EFFECTS */
   var hdr = $("header"), bar = $("#progress");
   function onScroll() {
     hdr.classList.toggle("scrolled", window.scrollY > 8);
@@ -28,18 +26,18 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
-  /* 3. PHONE LINKS: dial only on mobile phones */
+  /* 3. PHONE LINKS */
   var mobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) ||
     (navigator.maxTouchPoints > 1 && window.matchMedia("(pointer:coarse)").matches);
   if (!mobile) {
     $$('a[href^="tel:"]').forEach(function (a) {
       a.removeAttribute("href");
       a.classList.add("nodial");
-      a.title = "Calling works on mobile phones";
+      a.title = "শুধুমাত্র মোবাইল ফোন থেকে কল করা যাবে";
     });
   }
 
-  /* 3b. "COMING SOON" for links that do not lead anywhere yet (href="#") */
+  /* 3b. "COMING SOON" TOAST */
   var toastEl = document.createElement("div"), toastTimer;
   toastEl.className = "toast"; toastEl.setAttribute("role", "status"); toastEl.setAttribute("aria-live", "polite");
   document.body.appendChild(toastEl);
@@ -51,15 +49,14 @@
     var a = e.target.closest && e.target.closest('a[href="#"]');
     if (!a) return;
     e.preventDefault();
-    var label = a.classList.contains("store") ? "The mobile app" : (a.getAttribute("aria-label") || a.textContent.trim());
-    toast(label + " is coming soon.");
+    var label = a.classList.contains("store") ? "মোবাইল অ্যাপটি" : (a.getAttribute("aria-label") || a.textContent.trim());
+    toast(label + " শীঘ্রই আসছে।");
   });
 
-  /* 4. LOGIN WINDOW (email + password, sign up, forgot password)
-     Demo only: accounts live in this browser (localStorage). A real site needs a server. */
+  /* 4. LOGIN WINDOW */
   var modal = $("#loginModal"), btn = $("#loginBtn"), resetCode = "";
   var views = { login: $("#lf1"), signup: $("#lfS"), forgot: $("#lfF"), done: $("#lf3") };
-  var TITLES = { login: "Login", signup: "Create your account", forgot: "Reset your password", done: "You are logged in" };
+  var TITLES = { login: "লগইন", signup: "নতুন একাউন্ট তৈরি করুন", forgot: "পাসওয়ার্ড রিসেট", done: "আপনি লগইন অবস্থায় আছেন" };
   var FIRST = { login: "#lemail", signup: "#sname", forgot: "#femail", done: "#llogout" };
   function sha(s) {
     if (window.crypto && crypto.subtle && window.TextEncoder) {
@@ -75,7 +72,7 @@
   function user() { return store.get("dl_user"); }
   function paint() {
     var u = user(), a = u && accounts()[u];
-    btn.textContent = u ? ((a && a.name) || u).split(/[\s@]/)[0].slice(0, 12) : "Login";
+    btn.textContent = u ? ((a && a.name) || u).split(/[\s@]/)[0].slice(0, 12) : "লগইন";
   }
   function step(n) {
     Object.keys(views).forEach(function (k) { views[k].hidden = k !== n; });
@@ -103,24 +100,24 @@
   views.login.addEventListener("submit", function (e) {
     e.preventDefault();
     var em = $("#lemail").value.trim().toLowerCase(), pw = $("#lpass").value, er = $("#lerr1");
-    if (!EMAIL.test(em)) { er.textContent = "Please enter a valid email address."; return; }
-    if (!pw) { er.textContent = "Please enter your password."; return; }
+    if (!EMAIL.test(em)) { er.textContent = "একটি সঠিক ইমেইল ঠিকানা দিন।"; return; }
+    if (!pw) { er.textContent = "আপনার পাসওয়ার্ড লিখুন।"; return; }
     var a = accounts()[em];
-    if (!a) { er.textContent = "Incorrect email or password."; return; }
+    if (!a) { er.textContent = "ভুল ইমেইল বা পাসওয়ার্ড।"; return; }
     sha(a.salt + pw).then(function (h) {
-      if (h !== a.hash) { er.textContent = "Incorrect email or password."; return; }
+      if (h !== a.hash) { er.textContent = "ভুল ইমেইল বা পাসওয়ার্ড।"; return; }
       er.textContent = ""; $("#lpass").value = ""; signedIn(em);
     });
   });
   views.signup.addEventListener("submit", function (e) {
     e.preventDefault();
     var nm = $("#sname").value.trim(), em = $("#semail").value.trim().toLowerCase(), p1 = $("#spass").value, p2 = $("#spass2").value, er = $("#lerrS");
-    if (nm.length < 2) { er.textContent = "Please enter your full name."; return; }
-    if (!EMAIL.test(em)) { er.textContent = "Please enter a valid email address."; return; }
-    if (p1.length < 8) { er.textContent = "Password must be at least 8 characters."; return; }
-    if (p1 !== p2) { er.textContent = "The two passwords do not match."; return; }
+    if (nm.length < 2) { er.textContent = "আপনার পূর্ণ নাম লিখুন।"; return; }
+    if (!EMAIL.test(em)) { er.textContent = "একটি সঠিক ইমেইল ঠিকানা দিন।"; return; }
+    if (p1.length < 8) { er.textContent = "পাসওয়ার্ড অন্তত ৮ অক্ষরের হতে হবে।"; return; }
+    if (p1 !== p2) { er.textContent = "পাসওয়ার্ড দুটি মেলেনি।"; return; }
     var all = accounts();
-    if (all[em]) { er.textContent = "An account with this email already exists. Please log in."; return; }
+    if (all[em]) { er.textContent = "এই ইমেইল দিয়ে ইতিমধ্যে একাউন্ট খোলা আছে। লগইন করুন।"; return; }
     var salt = String(Math.random()).slice(2);
     sha(salt + p1).then(function (h) {
       all[em] = { name: nm, salt: salt, hash: h }; saveAccounts(all);
@@ -131,27 +128,27 @@
     e.preventDefault();
     var em = $("#femail").value.trim().toLowerCase(), er = $("#lerrF"), rest = $("#frest");
     if (rest.hidden) {
-      if (!EMAIL.test(em)) { er.textContent = "Please enter a valid email address."; return; }
-      if (!accounts()[em]) { er.textContent = "No account found with this email."; return; }
+      if (!EMAIL.test(em)) { er.textContent = "একটি সঠিক ইমেইল ঠিকানা দিন।"; return; }
+      if (!accounts()[em]) { er.textContent = "এই ইমেইলে কোনো একাউন্ট পাওয়া যায়নি।"; return; }
       resetCode = String(Math.floor(100000 + Math.random() * 900000));
-      $("#fhint").innerHTML = "Demo mode: no email is really sent yet. Your reset code is <b class='code'>" + resetCode + "</b>";
-      rest.hidden = false; $("#fbtn").textContent = "Reset password"; er.textContent = ""; $("#fcode").focus();
+      $("#fhint").innerHTML = "ডেমো মোড: টেস্ট রিসেট কোড হলো <b class='code'>" + resetCode + "</b>";
+      rest.hidden = false; $("#fbtn").textContent = "পাসওয়ার্ড রিসেট করুন"; er.textContent = ""; $("#fcode").focus();
       return;
     }
     var np = $("#fpass").value;
-    if ($("#fcode").value.trim() !== resetCode) { er.textContent = "That code is not correct."; return; }
-    if (np.length < 8) { er.textContent = "Password must be at least 8 characters."; return; }
+    if ($("#fcode").value.trim() !== resetCode) { er.textContent = "রিসেট কোডটি ভুল।"; return; }
+    if (np.length < 8) { er.textContent = "পাসওয়ার্ড অন্তত ৮ অক্ষরের হতে হবে।"; return; }
     var all = accounts(), salt = String(Math.random()).slice(2);
     sha(salt + np).then(function (h) {
       all[em].salt = salt; all[em].hash = h; saveAccounts(all);
-      views.forgot.reset(); rest.hidden = true; $("#fbtn").textContent = "Send reset code";
-      step("login"); $("#lmsg").textContent = "Password changed. Please log in.";
+      views.forgot.reset(); rest.hidden = true; $("#fbtn").textContent = "কোড পাঠান";
+      step("login"); $("#lmsg").textContent = "পাসওয়ার্ড পরিবর্তিত হয়েছে। লগইন করুন।";
     });
   });
   $("#llogout").addEventListener("click", function () { store.del("dl_user"); paint(); closeLogin(); });
   paint();
 
-  /* 5. REVEAL (inner pages; the home page does this in script.js) */
+  /* 5. REVEAL */
   if (!$("#spot")) {
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
@@ -159,7 +156,6 @@
     $$(".reveal").forEach(function (el) { io.observe(el); });
   }
 
-  /* example buttons: fill the form and search */
   $$(".ex").forEach(function (b) {
     b.addEventListener("click", function () {
       var f = b.closest(".tool").querySelector("form"); f.querySelector("input").value = b.dataset.fill;
@@ -169,36 +165,36 @@
 
   /* 6. PAGE TOOLS */
   var LEASES = {
-    "L-1001": { Lessee: "Rahim Uddin", Plot: "P-101", Area: "9 decimal", Term: "30 years (2015 to 2045)", Status: "Active" },
-    "L-1002": { Lessee: "Nasrin Akter", Plot: "P-104", Area: "2 decimal", Term: "10 years (2010 to 2020)", Status: "Expired" },
-    "L-1003": { Lessee: "Karim Traders", Plot: "P-106", Area: "3 decimal", Term: "20 years (2022 to 2042)", Status: "Active" }
+    "L-1001": { "ইজারাদার": "রহিম উদ্দিন", "প্লট": "P-101", "পরিমাণ": "৯ শতাংশ", "মেয়াদ": "৩০ বছর (২০১৫ থেকে ২০৪৫)", "অবস্থা": "সক্রিয়" },
+    "L-1002": { "ইজারাদার": "নাসরিন আক্তার", "প্লট": "P-104", "পরিমাণ": "২ শতাংশ", "মেয়াদ": "১০ বছর (২০১০ থেকে ২০২০)", "অবস্থা": "মেয়াদোত্তীর্ণ" },
+    "L-1003": { "ইজারাদার": "করিম ট্রেডার্স", "প্লট": "P-106", "পরিমাণ": "৩ শতাংশ", "মেয়াদ": "২০ বছর (২০২২ থেকে ২০৪২)", "অবস্থা": "সক্রিয়" }
   };
   onSubmit("leaseForm", function () {
     var id = $("#leaseId").value.trim().toUpperCase(), r = LEASES[id];
     if (window.Land && Land.isUid(id)) { $("#leaseRes").innerHTML = Land.leaseHTML(id); return; }
     $("#leaseRes").innerHTML = r
-      ? "<h3>" + esc(id) + ' <span class="pill ' + (r.Status === "Active" ? "ok" : "bad") + '">' + esc(r.Status) + "</span></h3>" + dl(r)
-      : '<p class="err">No lease found for “' + esc(id) + "”. Check the ID and try again.</p>";
+      ? "<h3>" + esc(id) + ' <span class="pill ' + (r["অবস্থা"] === "সক্রিয়" ? "ok" : "bad") + '">' + esc(r["অবস্থা"]) + "</span></h3>" + dl(r)
+      : '<p class="err">“' + esc(id) + "” এর জন্য কোনো ইজারা পাওয়া যায়নি। আইডিটি পরিবর্তন করে আবার চেষ্টা করুন।</p>";
   });
 
   var RATES = { Residential: { Urban: 30, Rural: 15 }, Agricultural: { Urban: 10, Rural: 5 }, Commercial: { Urban: 80, Rural: 40 } };
   onSubmit("taxForm", function () {
     var a = +$("#taxArea").value, y = +$("#taxYears").value || 0, t = $("#taxType").value, z = $("#taxZone").value, o = $("#taxRes");
-    if (!(a > 0)) { o.innerHTML = '<p class="err">Enter a land area greater than 0.</p>'; return; }
+    if (!(a > 0)) { o.innerHTML = '<p class="err">০ এর চেয়ে বেশি শতাংশ জমির পরিমাণ দিন।</p>'; return; }
     var rate = RATES[t][z], yearly = a * rate, arrears = yearly * y, late = yearly * 0.1 * y;
-    var rows = { "Rate": money(rate) + " per decimal", "Tax for this year": money(yearly) };
-    rows["Arrears (" + y + " yr)"] = money(arrears); rows["Late fee"] = money(late);
+    var rows = { "হার": money(rate) + " প্রতি শতাংশ", "চলতি বছরের কর": money(yearly) };
+    rows["বকায়া (" + y + " বছর)"] = money(arrears); rows["বিলম্ব ফি"] = money(late);
     o.innerHTML = dl(rows) +
-      '<p class="total">Total due <b>' + money(yearly + arrears + late) + "</b></p>";
+      '<p class="total">মোট দেয় পরিমাণ <b>' + money(yearly + arrears + late) + "</b></p>";
   });
 
   var PLOTS = {
-    "P-101": { x: 10, y: 10, w: 150, h: 110, Area: "12 decimal", Type: "Residential", Area_: "Urban" },
-    "P-102": { x: 170, y: 10, w: 140, h: 110, Area: "10 decimal", Type: "Residential", Area_: "Urban" },
-    "P-103": { x: 320, y: 10, w: 150, h: 110, Area: "15 decimal", Type: "Commercial", Area_: "Urban" },
-    "P-104": { x: 10, y: 130, w: 110, h: 120, Area: "8 decimal", Type: "Agricultural", Area_: "Rural" },
-    "P-105": { x: 130, y: 130, w: 170, h: 120, Area: "20 decimal", Type: "Agricultural", Area_: "Rural" },
-    "P-106": { x: 310, y: 130, w: 160, h: 120, Area: "25 decimal", Type: "Commercial", Area_: "Urban" }
+    "P-101": { x: 10, y: 10, w: 150, h: 110, Area: "১২ শতাংশ", Type: "আবাসিক", Area_: "শহরাঞ্চল" },
+    "P-102": { x: 170, y: 10, w: 140, h: 110, Area: "১০ শতাংশ", Type: "আবাসিক", Area_: "শহরাঞ্চল" },
+    "P-103": { x: 320, y: 10, w: 150, h: 110, Area: "১৫ শতাংশ", Type: "বাণিজ্যিক", Area_: "শহরাঞ্চল" },
+    "P-104": { x: 10, y: 130, w: 110, h: 120, Area: "৮ শতাংশ", Type: "কৃষি", Area_: "গ্রামাঞ্চল" },
+    "P-105": { x: 130, y: 130, w: 170, h: 120, Area: "২০ শতাংশ", Type: "কৃষি", Area_: "গ্রামাঞ্চল" },
+    "P-106": { x: 310, y: 130, w: 160, h: 120, Area: "২৫ শতাংশ", Type: "বাণিজ্যিক", Area_: "শহরাঞ্চল" }
   };
   var sel = $("#plotSel");
   if (sel) {
@@ -211,7 +207,7 @@
         return '<g class="plot' + (k === id ? " on" : "") + '" data-id="' + k + '" tabindex="0"><rect x="' + p.x + '" y="' + p.y + '" width="' + p.w + '" height="' + p.h + '" rx="10"/><text x="' + (p.x + p.w / 2) + '" y="' + (p.y + p.h / 2 + 5) + '" text-anchor="middle">' + k + "</text></g>";
       }).join("");
       var p = PLOTS[id];
-      $("#plotInfo").innerHTML = "<h3>" + id + "</h3>" + dl({ Area: p.Area, "Land type": p.Type, Zone: p.Area_ });
+      $("#plotInfo").innerHTML = "<h3>" + id + "</h3>" + dl({ "পরিমাণ": p.Area, "জমির ধরন": p.Type, "অঞ্চল": p.Area_ });
     };
     sel.addEventListener("change", function () { pick(sel.value); });
     svg.addEventListener("click", function (e) { var g = e.target.closest("[data-id]"); if (g) pick(g.dataset.id); });
@@ -220,28 +216,28 @@
   }
 
   var CASES = {
-    "C-2024-017": { Plot: "P-103", Court: "Dhaka Land Survey Tribunal", Status: "Hearing scheduled", "Next hearing": "12 Nov 2026" },
-    "C-2023-201": { Plot: "P-105", Court: "Savar Assistant Judge Court", Status: "Closed", "Next hearing": "None" },
-    "C-2025-044": { Plot: "P-103", Court: "Dhaka Land Survey Tribunal", Status: "Under review", "Next hearing": "To be announced" }
+    "C-2024-017": { Plot: "P-103", Court: "ঢাকা ল্যান্ড সার্ভে ট্রাইব্যুনাল", Status: "শুনানির তারিখ নির্ধারিত", "Next hearing": "১২ নভেম্বর ২০২৬" },
+    "C-2023-201": { Plot: "P-105", Court: "সাভার সহকারী জজ আদালত", Status: "নিষ্পত্তি হয়েছে", "Next hearing": "নাই" },
+    "C-2025-044": { Plot: "P-103", Court: "ঢাকা ল্যান্ড সার্ভে ট্রাইব্যুনাল", Status: "বিবেচনাধীন", "Next hearing": "পরবর্তীতে জানানো হবে" }
   };
   onSubmit("caseForm", function () {
     var q = $("#caseQ").value.trim().toUpperCase();
     if (window.Land && Land.isUid(q)) { $("#caseRes").innerHTML = Land.casesHTML(q); return; }
     var hits = Object.keys(CASES).filter(function (k) { return k === q || CASES[k].Plot === q; });
     $("#caseRes").innerHTML = hits.length
-      ? hits.map(function (k) { var c = CASES[k]; return "<h3>" + k + ' <span class="pill ' + (c.Status === "Closed" ? "ok" : "warn") + '">' + esc(c.Status) + "</span></h3>" + dl(c); }).join("")
-      : '<p class="err">No case found for “' + esc(q) + "”.</p>";
+      ? hits.map(function (k) { var c = CASES[k]; return "<h3>" + k + ' <span class="pill ' + (c.Status === "নিষ্পত্তি হয়েছে" ? "ok" : "warn") + '">' + esc(c.Status) + "</span></h3>" + dl(c); }).join("")
+      : '<p class="err">“' + esc(q) + "” এর জন্য কোনো মামলা পাওয়া যায়নি।</p>";
   });
 
   var FAQS = [
-    ["How do I check a plot?", "Log in, open Land Maps or Land Cases from the home page, and enter the plot or case number."],
-    ["Is Dreamland free to use?", "Searching is free. Some services, such as map copies, have a small fee in Bangladeshi Taka (৳). See the Land service fee list under About."],
-    ["How do I pay land tax?", "Open Land Tax, enter your land area in decimals and the land type, and the calculator shows the land development tax you owe."],
-    ["What is a UniqueID?", "A UniqueID is an 8-character code (letters and numbers) that identifies one piece of land by its location. Type it in the search bar on the home page to see its price, tax status and risk."],
-    ["Is the price and risk information official?", "No. The price outlook and risk level are an indicative guide only. Always confirm with your Upazila Land Office and a lawyer before you pay or sign."],
-    ["How long does a UniqueID application take?", "About 7 days. Use the Track box on the Apply for UniqueID page to see your status."],
-    ["Can I check a land case before buying?", "Yes. Search by plot ID on the Land Cases page to see any court case linked to the plot."],
-    ["Who can I contact for help?", "Use the email or phone number in the footer. On a phone, tap the number to call. You can also visit your Upazila Land Office."]
+    ["কীভাবে প্লট পরীক্ষা করব?", "লগইন করুন, হোম পেজ থেকে ম্যাপ বা মামলা অনুসন্ধান খুলুন এবং আপনার প্লট নম্বর প্রদান করুন।"],
+    ["ড্রিমল্যান্ড ব্যবহার করা কি সম্পূর্ণ বিনামূল্যে?", "অনুসন্ধান সার্ভিসটি নিখরচায় প্রদান করা হয়। তবে সার্টিফাইড কপির ক্ষেত্রে নির্দিষ্ট ফি প্রযোজ্য।"],
+    ["কীভাবে ভূমি উন্নয়ন কর হিসাব করব?", "ল্যান্ড ট্যাক্স পেজে গিয়ে শতাংশে জমির পরিমাণ ও শ্রেণি নির্বাচন করুন। ক্যালকুলেটর সরাসরি আপনার হিসাব দেখিয়ে দেবে।"],
+    ["ইউনিক আইডি (UniqueID) কী?", "ইউনিক আইডি হলো ৮ অক্ষরের একটি ডিজিটাল কোড যা ভূমির ভৌগোলিক অবস্থান ও মালিকানার পরিচয় নিশ্চিত করে।"],
+    ["এই দাম এবং ঝুঁকির তথ্য কি অফিসিয়াল?", "না, এগুলো সম্ভাব্য নির্দেশক মাত্র। প্রতিটি ক্রয়ের ক্ষেত্রে সংশ্লিষ্ট উপজেলা ভূমি অফিসে তথ্য যাচাই করুন।"],
+    ["ইউনিক আইডি আবেদনে কত দিন সময় লাগে?", "সাধারণত ৭ কর্মদিবসের মধ্যে অনুমোদন সম্পন্ন করা হয়।"],
+    ["জমি কেনার আগে মামলা আছে কি না কীভাবে দেখব?", "মামলা সার্ভিস পেজে প্লট আইডি লিখে অনুসন্ধান করলেই সম্পর্কিত মামলার তথ্য পেয়ে যাবেন।"],
+    ["যেকোনো প্রয়োজনে কার সাথে যোগাযোগ করব?", "ফুটারের প্রদত্ত ইমেইল বা হেল্পলাইন নম্বরে সরাসরি যোগাযোগ করতে পারেন।"]
   ];
   var fl = $("#faqList");
   if (fl) {
@@ -259,22 +255,22 @@
   onSubmit("uidForm", function (f) {
     var d = { name: $("#uName").value.trim(), email: $("#uEmail").value.trim(), phone: $("#uPhone").value.replace(/[\s-]/g, ""), nid: $("#uNid").value.trim(), dob: $("#uDob").value }, er = [];
     var b = new Date(d.dob);
-    if (d.name.length < 3) er.push("Enter your full name.");
-    if (!EMAIL.test(d.email)) er.push("Enter a valid email address.");
-    if (!/^(?:\+?88)?01[3-9]\d{8}$/.test(d.phone)) er.push("Enter a valid Bangladesh mobile number, e.g. 01712345678.");
-    if (!/^(\d{10}|\d{13}|\d{17})$/.test(d.nid)) er.push("NID number must be 10, 13 or 17 digits.");
-    if (!d.dob || isNaN(b) || (Date.now() - b) / 31557600000 < 18) er.push("You must be 18 or older.");
+    if (d.name.length < 3) er.push("আপনার পূর্ণ নাম প্রদান করুন।");
+    if (!EMAIL.test(d.email)) er.push("একটি সঠিক ইমেইল ঠিকানা দিন।");
+    if (!/^(?:\+?88)?01[3-9]\d{8}$/.test(d.phone)) er.push("সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন (যেমন: 01712345678)।");
+    if (!/^(\d{10}|\d{13}|\d{17})$/.test(d.nid)) er.push("এনআইডি নম্বর ১০, ১৩ অথবা ১৭ ডিজিটের হতে হবে।");
+    if (!d.dob || isNaN(b) || (Date.now() - b) / 31557600000 < 18) er.push("আবেদনকারীর বয়স অন্তত ১৮ বছর হতে হবে।");
     $("#uidErr").innerHTML = er.map(function (m) { return "<li>" + esc(m) + "</li>"; }).join("");
     if (er.length) return;
     var now = new Date(), ref = "UID-" + now.getFullYear() + String(now.getMonth() + 1).padStart(2, "0") + String(now.getDate()).padStart(2, "0") + "-" + Math.floor(1000 + Math.random() * 9000);
-    var all = apps(); all[ref] = { name: d.name, email: d.email, date: now.toLocaleDateString("en-GB"), status: "Received" };
+    var all = apps(); all[ref] = { name: d.name, email: d.email, date: now.toLocaleDateString("bn-BD"), status: "গৃহীত হয়েছে" };
     store.set("dl_apps", JSON.stringify(all)); f.reset(); if (uemail && user()) uemail.value = user();
-    $("#uidRes").innerHTML = '<div class="success"><h3>Application received</h3><p>Your reference number is <b class="code">' + ref + "</b>. Keep it to track your application.</p></div>";
+    $("#uidRes").innerHTML = '<div class="success"><h3>আবেদন সফলভাবে সংগৃহীত হয়েছে</h3><p>আপনার ট্র্যাকিং রেফারেন্স নম্বর: <b class="code">' + ref + "</b>। আবেদন ট্র্যাক করতে এই আইডি সংরক্ষণ করুন।</p></div>";
   });
   onSubmit("trackForm", function () {
     var ref = $("#trackRef").value.trim().toUpperCase(), a = apps()[ref];
     $("#trackRes").innerHTML = a
-      ? "<h3>" + esc(ref) + ' <span class="pill warn">' + esc(a.status) + "</span></h3>" + dl({ Name: a.name, Email: a.email, "Applied on": a.date })
-      : '<p class="err">No application found for “' + esc(ref) + "” in this browser.</p>";
+      ? "<h3>" + esc(ref) + ' <span class="pill warn">' + esc(a.status) + "</span></h3>" + dl({ "আবেদনকারী": a.name, "ইমেইল": a.email, "আবেদনের তারিখ": a.date })
+      : '<p class="err">“' + esc(ref) + "” রেফারেন্সের কোনো আবেদন পাওয়া যায়নি।</p>";
   });
 })();
