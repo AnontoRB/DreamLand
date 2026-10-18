@@ -29,22 +29,27 @@
   var RATES = { Residential: { Urban: 30, Rural: 15 }, Agricultural: { Urban: 10, Rural: 5 }, Commercial: { Urban: 80, Rural: 40 } };
   var RAW = [
     { lat: 23.84760823781365, lng: 90.25676245983189, place: "Savar, Dhaka", type: "Residential", zone: "Urban", len: 22.5, wid: 18, rot: 20, ppd: 700000, monthsBehind: 0,
-      water: { km: 0.4, name: "Bangshi River" }, flood: false, erosion: true, cases: [],
+      water: { km: 0.4, name: "Bangshi River" }, flood: false, erosion: true,
+      cases: [{ id: "C-2023-201", court: "Savar Assistant Judge Court", status: "Closed", next: "None" }],
+      lease: { id: "L-1001", lessee: "Rahim Uddin", term: "30 years (2015 to 2045)", status: "Active" },
       news: [{ t: "A new link road is planned close to this area", pct: 8 }] },
     { lat: 23.8759, lng: 90.3795, place: "Uttara, Dhaka", type: "Commercial", zone: "Urban", len: 30, wid: 20, rot: 0, ppd: 2500000, monthsBehind: 0,
       water: { km: 4.5, name: "Turag River" }, flood: false, erosion: false, cases: [],
       news: [{ t: "Strong demand for shop and office space", pct: 5 }] },
     { lat: 24.0023, lng: 90.4264, place: "Gazipur", type: "Agricultural", zone: "Rural", len: 40, wid: 30, rot: 35, ppd: 350000, monthsBehind: 14,
-      water: { km: 1.6, name: "Turag River" }, flood: false, erosion: false, cases: [{ id: "C-2024-017", status: "Hearing scheduled", next: "12 Nov 2026" }],
+      water: { km: 1.6, name: "Turag River" }, flood: false, erosion: false, cases: [{ id: "C-2024-017", court: "Dhaka Land Survey Tribunal", status: "Hearing scheduled", next: "12 Nov 2026" },
+               { id: "C-2025-044", court: "Dhaka Land Survey Tribunal", status: "Under review", next: "To be announced" }],
       news: [{ t: "Expressway interchange proposed about 3 km away", pct: 10 }, { t: "Court dispute may delay any sale", pct: -5 }] },
-    { lat: 24.8949, lng: 91.8687, place: "Sylhet", type: "Residential", zone: "Urban", len: 20, wid: 16, rot: 70, ppd: 900000, monthsBehind: 3,
+    { lat: 24.8949, lng: 91.8687, place: "Sylhet", type: "Residential", zone: "Urban", len: 20.2, wid: 16, rot: 70, ppd: 900000, monthsBehind: 3,
       water: { km: 0.9, name: "Surma River" }, flood: true, erosion: false, cases: [],
+      lease: { id: "L-1002", lessee: "Nasrin Akter", term: "10 years (2010 to 2020)", status: "Expired" },
       news: [{ t: "Drainage upgrade planned for the neighbourhood", pct: 3 }] },
     { lat: 21.4272, lng: 92.0058, place: "Cox’s Bazar", type: "Residential", zone: "Urban", len: 24, wid: 20, rot: 0, ppd: 1800000, monthsBehind: 7,
       water: { km: 3, name: "Bay of Bengal" }, flood: true, erosion: true, cases: [],
       news: [{ t: "Tourism growth is lifting demand", pct: 8 }] },
-    { lat: 22.3569, lng: 91.7832, place: "Chattogram", type: "Commercial", zone: "Urban", len: 25, wid: 18, rot: 90, ppd: 3000000, monthsBehind: 0,
+    { lat: 22.3569, lng: 91.7832, place: "Chattogram", type: "Commercial", zone: "Urban", len: 40.4, wid: 25, rot: 90, ppd: 3000000, monthsBehind: 0,
       water: { km: 2.4, name: "Karnaphuli River" }, flood: false, erosion: false, cases: [],
+      lease: { id: "L-1003", lessee: "Karim Traders", term: "20 years (2022 to 2042)", status: "Active" },
       news: [{ t: "Road widening near the port area", pct: 7 }, { t: "Traffic limits on the main road", pct: -2 }] }
   ];
   var PARCELS = {};
@@ -70,7 +75,8 @@
     else if (p.water.km <= 2) { score += 15; f.push(["Medium", p.water.km + " km from the " + p.water.name + ". Check flood and erosion history before buying."]); }
     if (p.erosion) { score += 15; f.push(["High", "Land erosion has been recorded in this area."]); }
     if (p.flood) { score += 20; f.push(["Medium", "The area is prone to flooding or storm surge."]); }
-    if (p.cases.length) { score += 25; f.push(["High", "A court case is linked to this plot (" + p.cases.map(function (c) { return c.id; }).join(", ") + "). Ownership may be disputed."]); }
+    var open = p.cases.filter(function (c) { return c.status !== "Closed"; });
+    if (open.length) { score += 25; f.push(["High", "An open court case is linked to this plot (" + open.map(function (c) { return c.id; }).join(", ") + "). Ownership may be disputed."]); }
     if (m > 12) { score += 10; f.push(["Medium", "More than a year of land tax is unpaid. Arrears usually need to be cleared before a transfer."]); }
     score = Math.min(100, score);
     var risk = score < 20 ? { cls: "ok", label: "Low" } : score < 45 ? { cls: "warn", label: "Medium" } : { cls: "bad", label: "High" };
@@ -79,13 +85,14 @@
     var verdict = risk.label === "Low" ? "Looks favourable. No major risk factors were found."
       : risk.label === "Medium" ? "Proceed with caution. Check the risks below before you pay anything."
       : "High risk. We do not recommend buying until these problems are resolved.";
-    verdict += change > 0 ? " Prices here may rise about " + change + "% over the next 12 months."
-      : change < 0 ? " Prices here may fall about " + Math.abs(change) + "% over the next 12 months."
-      : " Prices here are expected to stay flat.";
+    // Price is NOT part of the risk score. The price outlook is shown on its own.
+    var outlook = change > 0 ? "Prices here may rise about " + change + "% over the next 12 months."
+      : change < 0 ? "Prices here may fall about " + Math.abs(change) + "% over the next 12 months."
+      : "Prices here are expected to stay flat.";
 
     return { sqm: sqm, dec: dec, value: value, change: change, future: value * (1 + change / 100),
       tax: { yearly: yearly, monthly: monthly, months: m, arrears: arrears, late: late, due: arrears + late, paidTo: paidTo },
-      risk: risk, score: score, factors: f, verdict: verdict };
+      risk: risk, score: score, factors: f, verdict: verdict, outlook: outlook };
   }
 
   function sec(title, html) { return '<div class="rsec"><h4>' + esc(title) + "</h4>" + html + "</div>"; }
@@ -111,7 +118,7 @@
       '<p class="note">' + esc(p.place) + " · " + esc(p.type) + " · " + a.dec.toFixed(1) + " decimal (" + p.len + " m × " + p.wid + " m)</p>" +
       '<div class="verdict ' + a.risk.cls + '">' + esc(a.verdict) + "</div>" +
       sec("Land price", kv({ "Price per decimal": money(p.ppd), "Current value": money(a.value), "Expected change (12 months)": pct(a.change), "Expected value in 12 months": money(a.future) }) +
-        "<p>What may change the price:</p>" + drivers) +
+        "<p>" + esc(a.outlook) + " What may change the price:</p>" + drivers) +
       sec("Land tax", "<p>" + taxStatus(a) + "</p>" + taxRows(a)) +
       sec("Risk check", factors) + sec("Court cases", cases) +
       '<p class="rlinks"><a href="maps.html?id=' + code + '">See it on the map</a> · <a href="tax.html?id=' + code + '">Tax details</a></p>' +
@@ -124,7 +131,27 @@
     return "<h3>No record found</h3><p>No land is registered under " + esc(G.format(r.code)) + ". Check the code and try again.</p><p class=\"note\">Demo IDs to try: " + ex + "</p>";
   }
 
-  window.Land = { lookup: lookup, analyze: analyze, parcels: PARCELS, list: RAW, esc: esc, kv: kv, money: money, reportHTML: reportHTML, problemHTML: problemHTML, DECIMAL_SQM: DECIMAL_SQM };
+  function isUid(raw) { return /^[A-Z0-9]{4}[-\s]?[A-Z0-9]{4}$/i.test(String(raw).trim()); }
+  function casesHTML(raw) {
+    var r = lookup(raw);
+    if (r.status !== "ok") return problemHTML(r);
+    var p = r.p, ft = G.format(r.code);
+    if (!p.cases.length) return "<h3>" + ft + ' <span class="pill ok">No cases</span></h3><p>No court case is linked to this plot.</p>';
+    return p.cases.map(function (c) {
+      return "<h3>" + esc(c.id) + ' <span class="pill ' + (c.status === "Closed" ? "ok" : "warn") + '">' + esc(c.status) + "</span></h3>" +
+        kv({ Plot: ft + " (" + p.place + ")", Court: c.court, Status: c.status, "Next hearing": c.next });
+    }).join("");
+  }
+  function leaseHTML(raw) {
+    var r = lookup(raw);
+    if (r.status !== "ok") return problemHTML(r);
+    var p = r.p, ft = G.format(r.code), l = p.lease;
+    if (!l) return "<h3>" + ft + ' <span class="pill warn">No lease record</span></h3><p>No lease or settlement record is linked to this plot.</p>';
+    return "<h3>" + esc(l.id) + ' <span class="pill ' + (l.status === "Active" ? "ok" : "bad") + '">' + esc(l.status) + "</span></h3>" +
+      kv({ Lessee: l.lessee, Plot: ft + " (" + p.place + ")", Area: Math.round(analyze(p).dec) + " decimal", Term: l.term, Status: l.status });
+  }
+
+  window.Land = { isUid: isUid, casesHTML: casesHTML, leaseHTML: leaseHTML, lookup: lookup, analyze: analyze, parcels: PARCELS, list: RAW, esc: esc, kv: kv, money: money, reportHTML: reportHTML, problemHTML: problemHTML, DECIMAL_SQM: DECIMAL_SQM };
 
   /* ---------- 3. HOME PAGE SEARCH BAR ---------- */
   var sb = document.querySelector(".sbar input");

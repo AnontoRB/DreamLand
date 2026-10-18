@@ -32,8 +32,8 @@
 <main class="wrap inner">
 
 <div class="panel tool reveal"><h2>Check a lease record</h2>
-<p class="hint">Enter a lease ID. Try <button type="button" class="ex" data-fill="L-1001">L-1001</button> <button type="button" class="ex" data-fill="L-1002">L-1002</button> <button type="button" class="ex" data-fill="L-1003">L-1003</button></p>
-<form id="leaseForm" class="row" novalidate><label class="grow">Lease ID<input id="leaseId" placeholder="e.g. L-1001" maxlength="12" autocomplete="off"></label><button class="pbtn" type="submit">Search</button></form>
+<p class="hint">Enter a lease ID or a land UniqueID. Try <button type="button" class="ex" data-fill="L-1001">L-1001</button> <button type="button" class="ex" data-fill="L-1002">L-1002</button> <button type="button" class="ex" data-fill="L-1003">L-1003</button> <button type="button" class="ex" data-fill="Y40N-L9PA">Y40N-L9PA</button></p>
+<form id="leaseForm" class="row" novalidate><label class="grow">Lease ID or UniqueID<input id="leaseId" placeholder="e.g. L-1001 or Y40N-L9PA" maxlength="12" autocomplete="off"></label><button class="pbtn" type="submit">Search</button></form>
 <div id="leaseRes" class="res" aria-live="polite"></div></div><p class="note">Demo data: connect your real land-records database to show live results.</p>
 </main>
 
@@ -112,5 +112,7 @@
   </div>
 </div>
 <script src="site.js"></script>
+<script src="geoid.js"></script>
+<script src="land.js"></script>
 </body>
 </html>

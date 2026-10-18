@@ -293,7 +293,7 @@ footer{box-shadow:0 -14px 34px rgba(0,50,35,.22)}
 .ft a.hb:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.45)}
 .ft a.hn:hover{box-shadow:0 8px 20px rgba(212,33,58,.5)}
 .soc a:hover{box-shadow:0 8px 18px rgba(0,0,0,.45)}
-.toast{position:fixed;left:50%;bottom:1.5rem;z-index:120;max-width:calc(100% - 2rem);padding:.75rem 1.4rem;border-radius:999px;background:#00362a;color:#fff;border:1px solid rgba(255,255,255,.25);box-shadow:0 14px 34px rgba(0,0,0,.4);opacity:0;pointer-events:none;transform:translate(-50%,20px);transition:opacity .3s,transform .3s;text-align:center}
+.toast{position:fixed;left:50%;bottom:1.5rem;z-index:120;max-width:calc(100% - 2rem);padding:.75rem 1.4rem;border-radius:999px;background:#e8112d;color:#fff;border:1px solid rgba(255,255,255,.7);box-shadow:0 14px 34px rgba(0,0,0,.4);opacity:0;pointer-events:none;transform:translate(-50%,20px);transition:opacity .3s,transform .3s;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 /* UniqueID report, land map */
 .mbox.wide{width:min(40rem,100%)}

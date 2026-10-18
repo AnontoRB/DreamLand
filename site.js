@@ -169,12 +169,13 @@
 
   /* 6. PAGE TOOLS */
   var LEASES = {
-    "L-1001": { Lessee: "Rahim Uddin", Plot: "P-101", Area: "12 decimal", Term: "30 years (2015 to 2045)", Status: "Active" },
+    "L-1001": { Lessee: "Rahim Uddin", Plot: "P-101", Area: "10 decimal", Term: "30 years (2015 to 2045)", Status: "Active" },
     "L-1002": { Lessee: "Nasrin Akter", Plot: "P-104", Area: "8 decimal", Term: "10 years (2010 to 2020)", Status: "Expired" },
     "L-1003": { Lessee: "Karim Traders", Plot: "P-106", Area: "25 decimal", Term: "20 years (2022 to 2042)", Status: "Active" }
   };
   onSubmit("leaseForm", function () {
     var id = $("#leaseId").value.trim().toUpperCase(), r = LEASES[id];
+    if (window.Land && Land.isUid(id)) { $("#leaseRes").innerHTML = Land.leaseHTML(id); return; }
     $("#leaseRes").innerHTML = r
       ? "<h3>" + esc(id) + ' <span class="pill ' + (r.Status === "Active" ? "ok" : "bad") + '">' + esc(r.Status) + "</span></h3>" + dl(r)
       : '<p class="err">No lease found for “' + esc(id) + "”. Check the ID and try again.</p>";
@@ -225,6 +226,7 @@
   };
   onSubmit("caseForm", function () {
     var q = $("#caseQ").value.trim().toUpperCase();
+    if (window.Land && Land.isUid(q)) { $("#caseRes").innerHTML = Land.casesHTML(q); return; }
     var hits = Object.keys(CASES).filter(function (k) { return k === q || CASES[k].Plot === q; });
     $("#caseRes").innerHTML = hits.length
       ? hits.map(function (k) { var c = CASES[k]; return "<h3>" + k + ' <span class="pill ' + (c.Status === "Closed" ? "ok" : "warn") + '">' + esc(c.Status) + "</span></h3>" + dl(c); }).join("")

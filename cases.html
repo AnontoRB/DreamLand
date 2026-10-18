@@ -32,8 +32,8 @@
 <main class="wrap inner">
 
 <div class="panel tool reveal"><h2>Find a case</h2>
-<p class="hint">Search by case number or plot ID. Try <button type="button" class="ex" data-fill="C-2024-017">C-2024-017</button> <button type="button" class="ex" data-fill="P-103">P-103</button> <button type="button" class="ex" data-fill="C-2023-201">C-2023-201</button></p>
-<form id="caseForm" class="row" novalidate><label class="grow">Case number or plot ID<input id="caseQ" placeholder="e.g. C-2024-017" maxlength="16" autocomplete="off"></label><button class="pbtn" type="submit">Search</button></form>
+<p class="hint">Search by case number, plot ID or land UniqueID. Try <button type="button" class="ex" data-fill="C-2024-017">C-2024-017</button> <button type="button" class="ex" data-fill="P-103">P-103</button> <button type="button" class="ex" data-fill="C-2023-201">C-2023-201</button> <button type="button" class="ex" data-fill="RUV2-EYZH">RUV2-EYZH</button></p>
+<form id="caseForm" class="row" novalidate><label class="grow">Case number, plot ID or UniqueID<input id="caseQ" placeholder="e.g. C-2024-017 or RUV2-EYZH" maxlength="16" autocomplete="off"></label><button class="pbtn" type="submit">Search</button></form>
 <div id="caseRes" class="res" aria-live="polite"></div></div><p class="note">Demo data: connect your real land-records database to show live results.</p>
 </main>
 
@@ -112,5 +112,7 @@
   </div>
 </div>
 <script src="site.js"></script>
+<script src="geoid.js"></script>
+<script src="land.js"></script>
 </body>
 </html>
