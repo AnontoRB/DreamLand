@@ -156,36 +156,6 @@ header.scrolled {
   box-shadow: 0 10px 24px rgba(46, 140, 110, .5);
 }
 
-/* Header Right Action Group (Language Switcher + Login) */
-.header-actions {
-  grid-column: 3;
-  justify-self: end;
-  display: flex;
-  align-items: center;
-  gap: .6rem;
-}
-
-/* Language Switcher Button */
-.lang-btn {
-  all: unset;
-  cursor: pointer;
-  background: var(--card);
-  color: var(--ink);
-  border: 1px solid var(--line);
-  font-weight: 600;
-  font-size: .9rem;
-  padding: .45rem 1rem;
-  border-radius: 999px;
-  box-shadow: 0 4px 12px rgba(0, 50, 35, .1);
-  transition: transform .2s, box-shadow .2s, border-color .2s;
-}
-
-.lang-btn:hover {
-  transform: translateY(-2px);
-  border-color: var(--sky);
-  box-shadow: 0 6px 14px rgba(0, 50, 35, .18);
-}
-
 
 /* ==========================================================================
    3. SPOTLIGHT (Carousel, Slide Captions, Search Bar, Date)
