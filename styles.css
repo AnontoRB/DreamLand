@@ -310,3 +310,4 @@ ul.fx{margin:.3rem 0 0;padding-left:1.1rem;display:grid;gap:.4rem}
 .leaflet-control-layers label{display:block;font-weight:400;font-size:.9rem}
 .leaflet-control-layers input{width:auto;padding:0;box-shadow:none}
 @media (max-width:720px){#leafMap{height:22rem}}
+.maplegend{background:#fff;padding:.5rem .7rem;border-radius:.6rem;box-shadow:0 2px 8px rgba(0,0,0,.3);font-size:.85rem;line-height:1.5}.maplegend i{display:inline-block;width:.9rem;height:.9rem;margin-right:.45rem;border-radius:.2rem;vertical-align:-.1rem;opacity:.85}

@@ -169,9 +169,9 @@
 
   /* 6. PAGE TOOLS */
   var LEASES = {
-    "L-1001": { Lessee: "Rahim Uddin", Plot: "P-101", Area: "10 decimal", Term: "30 years (2015 to 2045)", Status: "Active" },
-    "L-1002": { Lessee: "Nasrin Akter", Plot: "P-104", Area: "8 decimal", Term: "10 years (2010 to 2020)", Status: "Expired" },
-    "L-1003": { Lessee: "Karim Traders", Plot: "P-106", Area: "25 decimal", Term: "20 years (2022 to 2042)", Status: "Active" }
+    "L-1001": { Lessee: "Rahim Uddin", Plot: "P-101", Area: "9 decimal", Term: "30 years (2015 to 2045)", Status: "Active" },
+    "L-1002": { Lessee: "Nasrin Akter", Plot: "P-104", Area: "2 decimal", Term: "10 years (2010 to 2020)", Status: "Expired" },
+    "L-1003": { Lessee: "Karim Traders", Plot: "P-106", Area: "3 decimal", Term: "20 years (2022 to 2042)", Status: "Active" }
   };
   onSubmit("leaseForm", function () {
     var id = $("#leaseId").value.trim().toUpperCase(), r = LEASES[id];
