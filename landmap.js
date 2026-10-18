@@ -25,14 +25,14 @@
   var legend = L.control({ position: "bottomleft" });
   legend.onAdd = function () {
     var d = L.DomUtil.create("div", "maplegend");
-    d.innerHTML = '<div><i style="background:#d4213a"></i>High risk (case or lease)</div><div><i style="background:#16845b"></i>No issues</div>';
+    d.innerHTML = '<div><i style="background:#ee5a70"></i>High risk (case or lease)</div><div><i style="background:#2e9d77"></i>No issues</div>';
     return d;
   };
   legend.addTo(map);
 
   /* one outline per registered building */
   var shapes = {}, current = null;
-  function colour(p) { return Land.analyze(p).risk.cls === "bad" ? "#d4213a" : "#16845b"; }
+  function colour(p) { return Land.analyze(p).risk.cls === "bad" ? "#ee5a70" : "#2e9d77"; }
   function style(p, on) { var c = colour(p); return { color: c, weight: on ? 4 : 2, fillColor: c, fillOpacity: on ? 0.55 : 0.3 }; }
   function hoverTip(poly, p) { poly.unbindTooltip(); poly.bindTooltip(G.format(p.id), { sticky: true }); }
 
