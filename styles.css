@@ -242,3 +242,19 @@ ul.err.list{margin:0;padding-left:1.1rem;grid-column:1/-1}
 .links{align-items:center}
 .has-dd>a{white-space:nowrap}
 @media (max-width:720px){.has-dd>a::after{margin-left:.2rem;border-width:3px}.links{white-space:nowrap}}
+
+/* Login window extras */
+.mbox form{display:grid;gap:.8rem}
+.mbox form p{margin:0}
+.rt{text-align:right}
+.alt{text-align:center;font-size:.92rem;color:var(--muted)}
+.lnk{all:unset;cursor:pointer;color:var(--sky);text-decoration:underline;font-size:.92rem;font-weight:600}
+.lnk:hover{color:var(--accent)}
+.lnk:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ok{color:#006a4e;font-size:.92rem}
+.ok:empty{display:none}
+.mbox .pbtn{width:100%;box-sizing:border-box}
+.mbox{max-height:calc(100vh - 2rem);overflow-y:auto}
+[hidden]{display:none!important}
+.mbox .err{min-height:0}
+.mbox .err:empty{display:none}

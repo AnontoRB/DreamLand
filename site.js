@@ -1,6 +1,6 @@
 /* ==========================================================================
    Dreamland – site.js (loaded on every page)
-   Sections: 1 Helpers · 2 Header effects · 3 Phone links · 4 Login window
+   Sections: 1 Helpers · 2 Header effects · 3 Phone links · 4 Login window (email + password)
              5 Reveal · 6 Page tools (lease, tax, maps, cases, faq, uid)
    ========================================================================== */
 (function () {
@@ -39,43 +39,99 @@
     });
   }
 
-  /* 4. LOGIN WINDOW (email + 6-digit code; demo mode, no real email is sent) */
-  var modal = $("#loginModal"), btn = $("#loginBtn"), f1 = $("#lf1"), f2 = $("#lf2"), f3 = $("#lf3"), pending = "", code = "";
+  /* 4. LOGIN WINDOW (email + password, sign up, forgot password)
+     Demo only: accounts live in this browser (localStorage). A real site needs a server. */
+  var modal = $("#loginModal"), btn = $("#loginBtn"), resetCode = "";
+  var views = { login: $("#lf1"), signup: $("#lfS"), forgot: $("#lfF"), done: $("#lf3") };
+  var TITLES = { login: "Login", signup: "Create your account", forgot: "Reset your password", done: "You are logged in" };
+  var FIRST = { login: "#lemail", signup: "#sname", forgot: "#femail", done: "#llogout" };
+  function sha(s) {
+    if (window.crypto && crypto.subtle && window.TextEncoder) {
+      return crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)).then(function (b) {
+        return [].map.call(new Uint8Array(b), function (x) { return x.toString(16).padStart(2, "0"); }).join("");
+      });
+    }
+    var h = 5381; for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+    return Promise.resolve("x" + (h >>> 0).toString(16));
+  }
+  function accounts() { try { return JSON.parse(store.get("dl_accounts") || "{}"); } catch (e) { return {}; } }
+  function saveAccounts(a) { store.set("dl_accounts", JSON.stringify(a)); }
   function user() { return store.get("dl_user"); }
-  function paint() { var u = user(); btn.textContent = u ? u.split("@")[0].slice(0, 12) : "Login"; }
+  function paint() {
+    var u = user(), a = u && accounts()[u];
+    btn.textContent = u ? ((a && a.name) || u).split(/[\s@]/)[0].slice(0, 12) : "Login";
+  }
   function step(n) {
-    f1.hidden = n !== 1; f2.hidden = n !== 2; f3.hidden = n !== 3;
-    $("#lt").textContent = n === 3 ? "You are logged in" : "Login with email";
-    var t = $(n === 1 ? "#lemail" : n === 2 ? "#lcode" : "#llogout");
-    setTimeout(function () { t.focus(); }, 30);
+    Object.keys(views).forEach(function (k) { views[k].hidden = k !== n; });
+    $("#lt").textContent = TITLES[n];
+    $$(".err", modal).forEach(function (p) { p.textContent = ""; });
+    $(FIRST[n]).focus();
   }
   function openLogin() {
     modal.hidden = false; document.body.classList.add("lock");
     if (user()) $("#lwho").textContent = user();
-    step(user() ? 3 : 1);
+    $("#lmsg").textContent = ""; step(user() ? "done" : "login");
   }
   function closeLogin() { modal.hidden = true; document.body.classList.remove("lock"); btn.focus(); }
+  function signedIn(email) {
+    store.set("dl_user", email); paint(); $("#lwho").textContent = email; step("done");
+    var u = $("#uEmail"); if (u && !u.value) u.value = email;
+  }
   btn.addEventListener("click", openLogin);
-  modal.addEventListener("click", function (e) { if (e.target === modal || e.target.hasAttribute("data-close")) closeLogin(); });
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal || e.target.hasAttribute("data-close")) closeLogin();
+    var g = e.target.getAttribute && e.target.getAttribute("data-go"); if (g) step(g);
+  });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !modal.hidden) closeLogin(); });
-  f1.addEventListener("submit", function (e) {
+
+  views.login.addEventListener("submit", function (e) {
     e.preventDefault();
-    var v = $("#lemail").value.trim().toLowerCase();
-    if (!EMAIL.test(v)) { $("#lerr1").textContent = "Please enter a valid email address."; return; }
-    $("#lerr1").textContent = ""; pending = v;
-    code = String(Math.floor(100000 + Math.random() * 900000));
-    $("#lhint").innerHTML = "We sent a code to <b></b>.<br><small>Demo mode: no email is really sent yet. Your code is <b class='code'>" + code + "</b></small>";
-    $("#lhint b").textContent = v;
-    $("#lcode").value = ""; step(2);
+    var em = $("#lemail").value.trim().toLowerCase(), pw = $("#lpass").value, er = $("#lerr1");
+    if (!EMAIL.test(em)) { er.textContent = "Please enter a valid email address."; return; }
+    if (!pw) { er.textContent = "Please enter your password."; return; }
+    var a = accounts()[em];
+    if (!a) { er.textContent = "Incorrect email or password."; return; }
+    sha(a.salt + pw).then(function (h) {
+      if (h !== a.hash) { er.textContent = "Incorrect email or password."; return; }
+      er.textContent = ""; $("#lpass").value = ""; signedIn(em);
+    });
   });
-  f2.addEventListener("submit", function (e) {
+  views.signup.addEventListener("submit", function (e) {
     e.preventDefault();
-    if ($("#lcode").value.trim() !== code) { $("#lerr2").textContent = "That code is not correct. Try again."; return; }
-    $("#lerr2").textContent = ""; store.set("dl_user", pending); paint();
-    $("#lwho").textContent = pending; step(3);
-    var u = $("#uEmail"); if (u && !u.value) u.value = pending;
+    var nm = $("#sname").value.trim(), em = $("#semail").value.trim().toLowerCase(), p1 = $("#spass").value, p2 = $("#spass2").value, er = $("#lerrS");
+    if (nm.length < 2) { er.textContent = "Please enter your full name."; return; }
+    if (!EMAIL.test(em)) { er.textContent = "Please enter a valid email address."; return; }
+    if (p1.length < 8) { er.textContent = "Password must be at least 8 characters."; return; }
+    if (p1 !== p2) { er.textContent = "The two passwords do not match."; return; }
+    var all = accounts();
+    if (all[em]) { er.textContent = "An account with this email already exists. Please log in."; return; }
+    var salt = String(Math.random()).slice(2);
+    sha(salt + p1).then(function (h) {
+      all[em] = { name: nm, salt: salt, hash: h }; saveAccounts(all);
+      views.signup.reset(); signedIn(em);
+    });
   });
-  $("#lback").addEventListener("click", function () { step(1); });
+  views.forgot.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var em = $("#femail").value.trim().toLowerCase(), er = $("#lerrF"), rest = $("#frest");
+    if (rest.hidden) {
+      if (!EMAIL.test(em)) { er.textContent = "Please enter a valid email address."; return; }
+      if (!accounts()[em]) { er.textContent = "No account found with this email."; return; }
+      resetCode = String(Math.floor(100000 + Math.random() * 900000));
+      $("#fhint").innerHTML = "Demo mode: no email is really sent yet. Your reset code is <b class='code'>" + resetCode + "</b>";
+      rest.hidden = false; $("#fbtn").textContent = "Reset password"; er.textContent = ""; $("#fcode").focus();
+      return;
+    }
+    var np = $("#fpass").value;
+    if ($("#fcode").value.trim() !== resetCode) { er.textContent = "That code is not correct."; return; }
+    if (np.length < 8) { er.textContent = "Password must be at least 8 characters."; return; }
+    var all = accounts(), salt = String(Math.random()).slice(2);
+    sha(salt + np).then(function (h) {
+      all[em].salt = salt; all[em].hash = h; saveAccounts(all);
+      views.forgot.reset(); rest.hidden = true; $("#fbtn").textContent = "Send reset code";
+      step("login"); $("#lmsg").textContent = "Password changed. Please log in.";
+    });
+  });
   $("#llogout").addEventListener("click", function () { store.del("dl_user"); paint(); closeLogin(); });
   paint();
 
@@ -160,10 +216,10 @@
   });
 
   var FAQS = [
-    ["How do I check a land record?", "Log in, open Land Maps or Land Cases from the home page, and enter the plot or case number."],
+    ["How do I check a plot?", "Log in, open Land Maps or Land Cases from the home page, and enter the plot or case number."],
     ["Is Dreamland free to use?", "Searching is free. Some services, such as certified copies, have a small fee. See the Land service fee list under About."],
     ["How do I pay land tax?", "Open Land Tax, enter your land area and type, and the calculator shows the amount you owe."],
-    ["What is a UniqueID?", "A UniqueID is a personal reference number that links you to your land records."],
+    ["What is a UniqueID?", "A UniqueID is a personal reference number that links you to your land."],
     ["How long does a UniqueID application take?", "About 7 days. Use the Track box on the Apply for UniqueID page to see your status."],
     ["Can I check a land case before buying?", "Yes. Search by plot ID on the Land Cases page to see any court case linked to the plot."],
     ["Who can I contact for help?", "Use the email or phone number in the footer. On a phone, tap the number to call."]

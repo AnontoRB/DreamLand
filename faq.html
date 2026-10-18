@@ -78,17 +78,33 @@
 <div class="modal" id="loginModal" hidden>
   <div class="mbox" role="dialog" aria-modal="true" aria-labelledby="lt">
     <button class="x" type="button" aria-label="Close" data-close>&times;</button>
-    <h3 id="lt">Login with email</h3>
+    <h3 id="lt">Login</h3>
     <form id="lf1" novalidate>
-      <p>Enter your email and we will send you a 6-digit code.</p>
+      <p class="ok" id="lmsg"></p>
       <label>Email<input type="email" id="lemail" placeholder="you@example.com" autocomplete="email"></label>
-      <p class="err" id="lerr1"></p><button class="pbtn" type="submit">Send code</button>
+      <label>Password<input type="password" id="lpass" autocomplete="current-password"></label>
+      <p class="rt"><button type="button" class="lnk" data-go="forgot">Forgot password?</button></p>
+      <p class="err" id="lerr1"></p><button class="pbtn" type="submit">Login</button>
+      <p class="alt">Don&rsquo;t have an account? <button type="button" class="lnk" data-go="signup">Click here</button></p>
     </form>
-    <form id="lf2" hidden novalidate>
-      <p id="lhint"></p>
-      <label>6-digit code<input id="lcode" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></label>
-      <p class="err" id="lerr2"></p><button class="pbtn" type="submit">Verify and login</button>
-      <button type="button" class="linkbtn" id="lback">Change email</button>
+    <form id="lfS" hidden novalidate>
+      <label>Full name<input id="sname" autocomplete="name" maxlength="60"></label>
+      <label>Email<input type="email" id="semail" autocomplete="email"></label>
+      <label>Password (8+ characters)<input type="password" id="spass" autocomplete="new-password"></label>
+      <label>Confirm password<input type="password" id="spass2" autocomplete="new-password"></label>
+      <p class="err" id="lerrS"></p><button class="pbtn" type="submit">Create account</button>
+      <p class="alt">Already have an account? <button type="button" class="lnk" data-go="login">Login</button></p>
+    </form>
+    <form id="lfF" hidden novalidate>
+      <p>Enter your account email and we will send you a reset code.</p>
+      <label>Email<input type="email" id="femail" autocomplete="email"></label>
+      <div id="frest" hidden>
+        <p id="fhint"></p>
+        <label>Reset code<input id="fcode" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></label>
+        <label>New password (8+ characters)<input type="password" id="fpass" autocomplete="new-password"></label>
+      </div>
+      <p class="err" id="lerrF"></p><button class="pbtn" type="submit" id="fbtn">Send reset code</button>
+      <p class="alt"><button type="button" class="lnk" data-go="login">Back to login</button></p>
     </form>
     <div id="lf3" hidden><p>Signed in as <b id="lwho"></b></p><button class="pbtn" id="llogout" type="button">Logout</button></div>
   </div>

@@ -74,11 +74,8 @@
      3. FEATURES (edit this list to add / change cards)
      ------------------------------------------------------------------ */
   var projects = [
-    { t: "Mutation", d: "Update land records after a transfer or inheritance.", tag: "Services", h: 164 },
     { t: "Lease & Settlement", d: "Details of leased and settled land.", tag: "Services", h: 355, href: "lease.html" },
-    { t: "Land Records", d: "Look up official records for a plot.", tag: "Records", h: 160 },
     { t: "Land Tax", d: "Check land tax details and dues.", tag: "Services", h: 350, href: "tax.html" },
-    { t: "Land Documents", d: "View and download your land documents.", tag: "Records", h: 168 },
     { t: "Land Maps", d: "View plot locations and boundaries.", tag: "Records", h: 358, href: "maps.html" },
     { t: "Land Cases", d: "Check court cases linked to a plot.", tag: "Legal & Help", h: 164, href: "cases.html" },
     { t: "FAQ", d: "Answers to common questions.", tag: "Legal & Help", h: 160, href: "faq.html" },
@@ -112,11 +109,8 @@
 
   var NS = "http://www.w3.org/2000/svg";
   var ICONS = {
-    "Mutation": ["M7 7h13M16 3l4 4-4 4M17 17H4M8 13l-4 4 4 4"],
     "Lease & Settlement": ["M12 15a4 4 0 1 1-8 0 4 4 0 0 1 8 0z", "M11 12l9-9M16 7l3 3M14 9l2 2"],
-    "Land Records": ["M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3z", "M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6", "M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"],
     "Land Tax": ["M19 5L5 19", "M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z", "M16.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"],
-    "Land Documents": ["M6 3h9l4 4v14H6z", "M14 3v5h5", "M9 13h7M9 17h7"],
     "Land Maps": ["M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z", "M9 3v15M15 6v15"],
     "Land Cases": ["M12 3v18M7 21h10M5 7h14", "M5 7l-3 7a3 3 0 0 0 6 0L5 7z", "M19 7l-3 7a3 3 0 0 0 6 0l-3-7z"],
     "Apply for UniqueID": ["M3 6h18v12H3z", "M7.5 11a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z", "M5.5 16c.5-2 4.5-2 5 0", "M13 10h5M13 14h5"],
