@@ -235,7 +235,8 @@
     ["How do I check a plot?", "Log in, open Land Maps or Land Cases from the home page, and enter the plot or case number."],
     ["Is Dreamland free to use?", "Searching is free. Some services, such as map copies, have a small fee in Bangladeshi Taka (৳). See the Land service fee list under About."],
     ["How do I pay land tax?", "Open Land Tax, enter your land area in decimals and the land type, and the calculator shows the land development tax you owe."],
-    ["What is a UniqueID?", "A UniqueID is a personal reference number that links you to your land."],
+    ["What is a UniqueID?", "A UniqueID is an 8-character code (letters and numbers) that identifies one piece of land by its location. Type it in the search bar on the home page to see its price, tax status and risk."],
+    ["Is the price and risk information official?", "No. The price outlook and risk level are an indicative guide only. Always confirm with your Upazila Land Office and a lawyer before you pay or sign."],
     ["How long does a UniqueID application take?", "About 7 days. Use the Track box on the Apply for UniqueID page to see your status."],
     ["Can I check a land case before buying?", "Yes. Search by plot ID on the Land Cases page to see any court case linked to the plot."],
     ["Who can I contact for help?", "Use the email or phone number in the footer. On a phone, tap the number to call. You can also visit your Upazila Land Office."]

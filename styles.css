@@ -295,3 +295,18 @@ footer{box-shadow:0 -14px 34px rgba(0,50,35,.22)}
 .soc a:hover{box-shadow:0 8px 18px rgba(0,0,0,.45)}
 .toast{position:fixed;left:50%;bottom:1.5rem;z-index:120;max-width:calc(100% - 2rem);padding:.75rem 1.4rem;border-radius:999px;background:#00362a;color:#fff;border:1px solid rgba(255,255,255,.25);box-shadow:0 14px 34px rgba(0,0,0,.4);opacity:0;pointer-events:none;transform:translate(-50%,20px);transition:opacity .3s,transform .3s;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
+/* UniqueID report, land map */
+.mbox.wide{width:min(40rem,100%)}
+.rep h3{margin:0 0 .3rem;padding-right:1.5rem}
+.rsec{margin-top:1rem;padding-top:.9rem;border-top:1px solid var(--line)}
+.rsec h4{margin:0 0 .6rem;font:700 1.05rem Georgia,serif;color:var(--sky)}
+.verdict{padding:.8rem 1rem;border-radius:.8rem;font-weight:600;margin-top:.6rem}
+.verdict.ok{background:#d9f3e7;color:#006a4e}.verdict.warn{background:#fff0d1;color:#8a5a00}.verdict.bad{background:#fde0e4;color:#b3132a}
+ul.fx{margin:.3rem 0 0;padding-left:1.1rem;display:grid;gap:.4rem}
+.up{color:#006a4e}.down{color:#b3132a}
+.rlinks{margin-top:1rem}.rlinks a{color:var(--sky);font-weight:600}
+.mbox .rep p{margin:0 0 .6rem}
+#leafMap{height:30rem;position:relative;z-index:0;border-radius:.9rem;box-shadow:inset 0 2px 8px rgba(0,50,35,.2)}
+.leaflet-control-layers label{display:block;font-weight:400;font-size:.9rem}
+.leaflet-control-layers input{width:auto;padding:0;box-shadow:none}
+@media (max-width:720px){#leafMap{height:22rem}}

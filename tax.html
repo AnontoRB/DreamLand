@@ -28,10 +28,14 @@
 <div class="progress" id="progress"></div>
 
 <section class="phero"><div class="wrap"><nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Home</a> / Land Tax</nav>
-<h1>Land Tax</h1><p>Work out your land development tax (Bhumi Unnayan Kor) and any dues in a few seconds.</p></div></section>
+<h1>Land Tax</h1><p>Look up your land tax with a UniqueID, or work it out by hand in a few seconds.</p></div></section>
 <main class="wrap inner">
 
-<div class="panel tool reveal"><h2>Land tax calculator</h2>
+<div class="panel tool reveal"><h2>Look up tax by UniqueID</h2>
+<p class="hint">Enter a land UniqueID to see whether tax is paid, the tax per month and what you owe. Try <button type="button" class="ex" data-fill="Y40N-L9PA">Y40N-L9PA</button></p>
+<form id="taxIdForm" class="row" novalidate><label class="grow">UniqueID<input id="taxIdIn" placeholder="e.g. Y40N-L9PA" maxlength="12" autocomplete="off"></label><button class="pbtn" type="submit">Look up</button></form>
+<div id="taxIdRes" class="res" aria-live="polite"></div></div>
+<div class="panel tool reveal"><h2>Or calculate by hand</h2>
 <form id="taxForm" class="fgrid" novalidate>
 <label>Land area (decimal / shatak)<input id="taxArea" type="number" min="0" step="any" placeholder="e.g. 12"></label>
 <label>Land type<select id="taxType"><option value="Residential">Residential (Bastu)</option><option value="Agricultural">Agricultural (Krishi)</option><option value="Commercial">Commercial (Banijjik)</option></select></label>
@@ -117,5 +121,7 @@
   </div>
 </div>
 <script src="site.js"></script>
+<script src="geoid.js"></script>
+<script src="land.js"></script>
 </body>
 </html>

@@ -7,6 +7,7 @@
 <meta name="color-scheme" content="light">
 <title>Land Maps – Dreamland</title>
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
 </head>
 <body data-page="maps">
 <header>
@@ -28,13 +29,13 @@
 <div class="progress" id="progress"></div>
 
 <section class="phero"><div class="wrap"><nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Home</a> / Land Maps</nav>
-<h1>Land Maps</h1><p>View plot locations and boundaries.</p></div></section>
+<h1>Land Maps</h1><p>Search a UniqueID to find and measure a plot on the map of Bangladesh.</p></div></section>
 <main class="wrap inner">
 
-<div class="panel tool reveal"><h2>Plot finder</h2>
-<label class="grow">Choose a plot<select id="plotSel"></select></label>
-<div class="mapwrap"><svg id="mapSvg" viewBox="0 0 480 260" role="img" aria-label="Map of plots"></svg><div id="plotInfo" class="res" aria-live="polite"></div></div>
-<p class="hint">You can also click a plot on the map.</p></div><p class="note">Demo data: connect your real land-records database to show live results.</p>
+<div class="panel tool reveal"><h2>Find a plot on the map</h2>
+<p class="hint">Enter a land UniqueID and the plot is found, highlighted and measured. Try <button type="button" class="ex" data-fill="Y40N-L9PA">Y40N-L9PA</button></p>
+<form id="mapIdForm" class="row" novalidate><label class="grow">UniqueID<input id="mapIdIn" placeholder="e.g. Y40N-L9PA" maxlength="12" autocomplete="off"></label><button class="pbtn" type="submit">Search</button><button class="pbtn" type="button" id="mapReset">Reset map</button></form>
+<div class="mapwrap"><div id="leafMap" role="region" aria-label="Map of Bangladesh"></div><div id="plotInfo" class="res" aria-live="polite">Enter a UniqueID to find the plot, see its size and view its details.</div></div></div><p class="note">Demo data: connect your real land-records database to show live results.</p>
 </main>
 
 <footer>
@@ -112,5 +113,9 @@
   </div>
 </div>
 <script src="site.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script src="geoid.js"></script>
+<script src="land.js"></script>
+<script src="landmap.js"></script>
 </body>
 </html>

@@ -45,17 +45,6 @@
 <div class="panel tool reveal"><h2>Track your application</h2>
 <form id="trackForm" class="row" novalidate><label class="grow">Reference number<input id="trackRef" placeholder="UID-20261018-1234" autocomplete="off"></label><button class="pbtn" type="submit">Track</button></form>
 <div id="trackRes" class="res" aria-live="polite"></div></div></div>
-<div class="panel tool reveal"><h2>Land UniqueID generator</h2>
-<p class="hint">Turn a plot&rsquo;s location into an 8-character code (A&ndash;Z, 0&ndash;9, not case-sensitive). Try <button type="button" class="ex" id="geoEx">23.84760823781365, 90.25676245983189</button></p>
-<form id="geoForm" class="fgrid" novalidate>
-<label>Latitude<input id="geoLat" inputmode="decimal" placeholder="23.84760823781365" autocomplete="off"></label>
-<label>Longitude<input id="geoLng" inputmode="decimal" placeholder="90.25676245983189" autocomplete="off"></label>
-<button class="pbtn" type="submit">Generate UniqueID</button>
-<button class="pbtn" type="button" id="geoLocate">Use my location</button></form>
-<div id="geoRes" class="res" aria-live="polite"></div>
-<h2 style="margin-top:1.6rem">Find a location from a UniqueID</h2>
-<form id="geoDecodeForm" class="row" novalidate><label class="grow">UniqueID<input id="geoCodeIn" placeholder="e.g. Y40N-L9PA" maxlength="9" autocomplete="off"></label><button class="pbtn" type="submit">Look up</button></form>
-<div id="geoDecRes" class="res" aria-live="polite"></div></div>
 <p class="note">Your NID number is only checked for format and is not stored. Applications are saved in this browser for the demo.</p>
 </main>
 
@@ -134,6 +123,5 @@
   </div>
 </div>
 <script src="site.js"></script>
-<script src="geoid.js"></script>
 </body>
 </html>
