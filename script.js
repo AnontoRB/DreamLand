@@ -1,7 +1,7 @@
 /* ==========================================================================
    Dreamland – script.js
    Sections:
-     1. Settings (edit scroll targets here)
+     1. Settings (edit scroll targets here; Login now opens the login window, see site.js)
      2. Spotlight carousel + today's date
      3. Features list, filter chips and cards
      4. Reveal on scroll
@@ -19,7 +19,6 @@
      You can also add data-scroll-to="#some-id" to ANY element in the HTML.
      ------------------------------------------------------------------ */
   var SCROLL = {
-    login: "#projects",  // the Login button in the header
     chip: "#projects"    // the filter chips (All / Services / Records / ...)
   };
 
@@ -76,14 +75,14 @@
      ------------------------------------------------------------------ */
   var projects = [
     { t: "Mutation", d: "Update land records after a transfer or inheritance.", tag: "Services", h: 164 },
-    { t: "Lease & Settlement", d: "Details of leased and settled land.", tag: "Services", h: 355 },
+    { t: "Lease & Settlement", d: "Details of leased and settled land.", tag: "Services", h: 355, href: "lease.html" },
     { t: "Land Records", d: "Look up official records for a plot.", tag: "Records", h: 160 },
-    { t: "Land Tax", d: "Check land tax details and dues.", tag: "Services", h: 350 },
-    { t: "Apply for UniqueID", d: "Apply for your unique ID.", tag: "Services", h: 355, hot: true },
+    { t: "Land Tax", d: "Check land tax details and dues.", tag: "Services", h: 350, href: "tax.html" },
     { t: "Land Documents", d: "View and download your land documents.", tag: "Records", h: 168 },
-    { t: "Land Maps", d: "View plot locations and boundaries.", tag: "Records", h: 358 },
-    { t: "Land Cases", d: "Check court cases linked to a plot.", tag: "Legal & Help", h: 164 },
-    { t: "FAQ", d: "Answers to common questions.", tag: "Legal & Help", h: 160 }
+    { t: "Land Maps", d: "View plot locations and boundaries.", tag: "Records", h: 358, href: "maps.html" },
+    { t: "Land Cases", d: "Check court cases linked to a plot.", tag: "Legal & Help", h: 164, href: "cases.html" },
+    { t: "FAQ", d: "Answers to common questions.", tag: "Legal & Help", h: 160, href: "faq.html" },
+    { t: "Apply for UniqueID", d: "Apply for your unique ID.", tag: "Services", h: 355, href: "unique-id.html", hot: true }
   ];
 
   var tags = ["All"],
@@ -143,7 +142,9 @@
     projects.forEach(function (p) {
       if (state.tag !== "All" && p.tag !== state.tag) return;
       if (state.q && (p.t + " " + p.d + " " + p.tag).toLowerCase().indexOf(state.q) < 0) return;
-      var c = document.createElement("article");
+      var c = document.createElement(p.href ? "a" : "article");
+      if (p.href) c.href = p.href;
+      c.style.setProperty("--i", n);
       c.className = "card";
       if (p.hot) c.className += " hot";
       c.tabIndex = 0;
