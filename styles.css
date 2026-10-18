@@ -6,7 +6,7 @@
 /* 1. THEME & BASE */
 :root{--bg:#f6faf8;--card:#fff;--ink:#12261f;--muted:#4b5f57;--sky:#006a4e;--accent:#d4213a;--line:#d3e6dd;--glass:rgba(246,250,248,.88);
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 4.5rem);scroll-behavior:smooth}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 4rem);scroll-behavior:smooth}
 *,*::before,*::after{box-sizing:inherit}
 body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
@@ -15,7 +15,7 @@ a{color:var(--accent)}
 .wrap{max-width:72rem;margin:0 auto;padding:0 1.25rem}
 /* 2. HEADER */
 header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--glass);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;height:4rem}
+.bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;height:3.4rem}
 .logo{font:700 1.35rem Georgia,serif;text-decoration:none;color:var(--sky)}
 .logo span{color:var(--accent)}
 .links{display:flex;gap:1.6rem;justify-content:center;grid-column:2}
@@ -236,7 +236,7 @@ ul.err.list{margin:0;padding-left:1.1rem;grid-column:1/-1}
 .tbl th,.tbl td{text-align:left;padding:.65rem .8rem;border-bottom:1px solid var(--line)}
 .tbl th{background:#e8f5ef;color:var(--sky)}
 .tbl tbody tr:hover{background:#f1f8f5}
-#objective,#how-to-use,#benefits,#laws,#fees{scroll-margin-top:5rem}
+#objective,#how-to-use,#benefits,#laws,#fees{scroll-margin-top:4.5rem}
 @media (max-width:720px){.mapwrap{grid-template-columns:1fr}.has-dd{padding:.7rem 0}.menu{min-width:13rem}}
 @media (prefers-reduced-motion:reduce){.card,.phero,.inner,.mbox,.success{animation:none!important}}
 .links{align-items:center}
@@ -258,3 +258,40 @@ ul.err.list{margin:0;padding-left:1.1rem;grid-column:1/-1}
 [hidden]{display:none!important}
 .mbox .err{min-height:0}
 .mbox .err:empty{display:none}
+
+/* ==========================================================================
+   10. MORE SHADOWS, SLIMMER TOP BAR, TOAST
+   ========================================================================== */
+header{box-shadow:0 6px 20px rgba(0,50,35,.14),0 1px 0 rgba(0,106,78,.12)}
+header.scrolled{box-shadow:0 12px 34px rgba(0,50,35,.26),0 2px 0 rgba(0,106,78,.15)}
+.logo{text-shadow:0 2px 8px rgba(0,106,78,.28)}
+.links>a,.has-dd>a{transition:color .2s,text-shadow .2s}
+.links>a:hover,.has-dd>a:hover{text-shadow:0 2px 10px rgba(212,33,58,.35)}
+.login{box-shadow:0 6px 16px rgba(0,106,78,.4)}
+.login:hover{box-shadow:0 10px 24px rgba(0,106,78,.5)}
+.has-dd{padding:.7rem 0}
+.menu{box-shadow:0 22px 48px rgba(0,50,35,.28),0 4px 12px rgba(0,50,35,.12)}
+.sbar{box-shadow:0 8px 22px rgba(0,30,20,.3)}
+.date{box-shadow:0 6px 16px rgba(0,30,20,.3)}
+.dots button{box-shadow:0 0 0 1px rgba(0,40,28,.3),0 2px 6px rgba(0,30,20,.35)}
+.head h2.t{text-shadow:0 2px 8px rgba(0,50,35,.15)}
+.chip[aria-pressed="true"]{box-shadow:0 6px 16px rgba(0,106,78,.4)}
+.card:hover,.card:focus-visible{box-shadow:0 20px 40px rgba(212,33,58,.45)}
+.card .ico{box-shadow:0 6px 14px rgba(0,0,0,.25)}
+.card .tag{box-shadow:0 3px 8px rgba(0,0,0,.25)}
+.panel{transition:transform .25s,box-shadow .25s}
+.panel:hover{transform:translateY(-3px);box-shadow:0 18px 40px rgba(0,50,35,.18)}
+.kv div:hover{box-shadow:0 8px 18px rgba(0,50,35,.14)}
+.mbox{box-shadow:0 30px 70px rgba(0,0,0,.5),0 8px 20px rgba(0,0,0,.2)}
+.qa{transition:box-shadow .25s}
+.qa:hover,.qa[open]{box-shadow:0 10px 24px rgba(0,50,35,.16)}
+.phero{box-shadow:0 14px 34px rgba(0,50,35,.38)}
+footer{box-shadow:0 -14px 34px rgba(0,50,35,.22)}
+.store{transition:transform .2s,box-shadow .2s}
+.store:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.5)}
+.ft a.hb{transition:transform .2s,box-shadow .2s}
+.ft a.hb:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.45)}
+.ft a.hn:hover{box-shadow:0 8px 20px rgba(212,33,58,.5)}
+.soc a:hover{box-shadow:0 8px 18px rgba(0,0,0,.45)}
+.toast{position:fixed;left:50%;bottom:1.5rem;z-index:120;max-width:calc(100% - 2rem);padding:.75rem 1.4rem;border-radius:999px;background:#00362a;color:#fff;border:1px solid rgba(255,255,255,.25);box-shadow:0 14px 34px rgba(0,0,0,.4);opacity:0;pointer-events:none;transform:translate(-50%,20px);transition:opacity .3s,transform .3s;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}

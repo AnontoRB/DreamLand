@@ -28,18 +28,18 @@
 <div class="progress" id="progress"></div>
 
 <section class="phero"><div class="wrap"><nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Home</a> / Land Tax</nav>
-<h1>Land Tax</h1><p>Work out your land tax and any dues in a few seconds.</p></div></section>
+<h1>Land Tax</h1><p>Work out your land development tax (Bhumi Unnayan Kor) and any dues in a few seconds.</p></div></section>
 <main class="wrap inner">
 
 <div class="panel tool reveal"><h2>Land tax calculator</h2>
 <form id="taxForm" class="fgrid" novalidate>
-<label>Land area (decimal)<input id="taxArea" type="number" min="0" step="any" placeholder="e.g. 12"></label>
-<label>Land type<select id="taxType"><option>Residential</option><option>Agricultural</option><option>Commercial</option></select></label>
-<label>Area<select id="taxZone"><option>Urban</option><option>Rural</option></select></label>
+<label>Land area (decimal / shatak)<input id="taxArea" type="number" min="0" step="any" placeholder="e.g. 12"></label>
+<label>Land type<select id="taxType"><option value="Residential">Residential (Bastu)</option><option value="Agricultural">Agricultural (Krishi)</option><option value="Commercial">Commercial (Banijjik)</option></select></label>
+<label>Area<select id="taxZone"><option value="Urban">Urban (City / Pourashava)</option><option value="Rural">Rural (Union)</option></select></label>
 <label>Years overdue<input id="taxYears" type="number" min="0" max="10" value="0"></label>
 <button class="pbtn" type="submit">Calculate</button></form>
 <div id="taxRes" class="res" aria-live="polite"></div></div>
-<p class="note">Illustrative rates (BDT per decimal per year) with a 10% late fee for each overdue year. Replace with the official rate table.</p>
+<p class="note">Illustrative rates (Bangladeshi Taka, ৳, per decimal per year) with a 10% late fee for each overdue year. Replace with the official rate table.</p>
 </main>
 
 <footer>

@@ -15,7 +15,7 @@
   var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function dl(o) { return '<dl class="kv">' + Object.keys(o).map(function (k) { return "<div><dt>" + esc(k) + "</dt><dd>" + esc(o[k]) + "</dd></div>"; }).join("") + "</dl>"; }
-  function money(n) { return "৳ " + n.toLocaleString("en-US", { maximumFractionDigits: 2 }); }
+  function money(n) { return "৳ " + n.toLocaleString("en-BD", { maximumFractionDigits: 2 }); }
   function onSubmit(id, fn) { var f = document.getElementById(id); if (f) f.addEventListener("submit", function (e) { e.preventDefault(); fn(f); }); }
 
   /* 2. HEADER EFFECTS: shadow when scrolled + reading progress bar */
@@ -38,6 +38,22 @@
       a.title = "Calling works on mobile phones";
     });
   }
+
+  /* 3b. "COMING SOON" for links that do not lead anywhere yet (href="#") */
+  var toastEl = document.createElement("div"), toastTimer;
+  toastEl.className = "toast"; toastEl.setAttribute("role", "status"); toastEl.setAttribute("aria-live", "polite");
+  document.body.appendChild(toastEl);
+  function toast(msg) {
+    toastEl.textContent = msg; toastEl.classList.add("show");
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { toastEl.classList.remove("show"); }, 2600);
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('a[href="#"]');
+    if (!a) return;
+    e.preventDefault();
+    var label = a.classList.contains("store") ? "The mobile app" : (a.getAttribute("aria-label") || a.textContent.trim());
+    toast(label + " is coming soon.");
+  });
 
   /* 4. LOGIN WINDOW (email + password, sign up, forgot password)
      Demo only: accounts live in this browser (localStorage). A real site needs a server. */
@@ -203,9 +219,9 @@
   }
 
   var CASES = {
-    "C-2024-017": { Plot: "P-103", Court: "Dhaka Land Court", Status: "Hearing scheduled", "Next hearing": "12 Nov 2026" },
-    "C-2023-201": { Plot: "P-105", Court: "Savar Land Court", Status: "Closed", "Next hearing": "None" },
-    "C-2025-044": { Plot: "P-103", Court: "Dhaka Land Court", Status: "Under review", "Next hearing": "To be announced" }
+    "C-2024-017": { Plot: "P-103", Court: "Dhaka Land Survey Tribunal", Status: "Hearing scheduled", "Next hearing": "12 Nov 2026" },
+    "C-2023-201": { Plot: "P-105", Court: "Savar Assistant Judge Court", Status: "Closed", "Next hearing": "None" },
+    "C-2025-044": { Plot: "P-103", Court: "Dhaka Land Survey Tribunal", Status: "Under review", "Next hearing": "To be announced" }
   };
   onSubmit("caseForm", function () {
     var q = $("#caseQ").value.trim().toUpperCase();
@@ -217,12 +233,12 @@
 
   var FAQS = [
     ["How do I check a plot?", "Log in, open Land Maps or Land Cases from the home page, and enter the plot or case number."],
-    ["Is Dreamland free to use?", "Searching is free. Some services, such as certified copies, have a small fee. See the Land service fee list under About."],
-    ["How do I pay land tax?", "Open Land Tax, enter your land area and type, and the calculator shows the amount you owe."],
+    ["Is Dreamland free to use?", "Searching is free. Some services, such as map copies, have a small fee in Bangladeshi Taka (৳). See the Land service fee list under About."],
+    ["How do I pay land tax?", "Open Land Tax, enter your land area in decimals and the land type, and the calculator shows the land development tax you owe."],
     ["What is a UniqueID?", "A UniqueID is a personal reference number that links you to your land."],
     ["How long does a UniqueID application take?", "About 7 days. Use the Track box on the Apply for UniqueID page to see your status."],
     ["Can I check a land case before buying?", "Yes. Search by plot ID on the Land Cases page to see any court case linked to the plot."],
-    ["Who can I contact for help?", "Use the email or phone number in the footer. On a phone, tap the number to call."]
+    ["Who can I contact for help?", "Use the email or phone number in the footer. On a phone, tap the number to call. You can also visit your Upazila Land Office."]
   ];
   var fl = $("#faqList");
   if (fl) {
@@ -242,7 +258,7 @@
     var b = new Date(d.dob);
     if (d.name.length < 3) er.push("Enter your full name.");
     if (!EMAIL.test(d.email)) er.push("Enter a valid email address.");
-    if (!/^\+?\d{10,14}$/.test(d.phone)) er.push("Enter a valid phone number (10 to 14 digits).");
+    if (!/^(?:\+?88)?01[3-9]\d{8}$/.test(d.phone)) er.push("Enter a valid Bangladesh mobile number, e.g. 01712345678.");
     if (!/^(\d{10}|\d{13}|\d{17})$/.test(d.nid)) er.push("NID number must be 10, 13 or 17 digits.");
     if (!d.dob || isNaN(b) || (Date.now() - b) / 31557600000 < 18) er.push("You must be 18 or older.");
     $("#uidErr").innerHTML = er.map(function (m) { return "<li>" + esc(m) + "</li>"; }).join("");

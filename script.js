@@ -74,12 +74,12 @@
      3. FEATURES (edit this list to add / change cards)
      ------------------------------------------------------------------ */
   var projects = [
+    { t: "Apply for UniqueID", d: "Apply for your unique ID.", tag: "Services", h: 355, href: "unique-id.html", hot: true },
     { t: "Lease & Settlement", d: "Details of leased and settled land.", tag: "Services", h: 355, href: "lease.html" },
     { t: "Land Tax", d: "Check land tax details and dues.", tag: "Services", h: 350, href: "tax.html" },
     { t: "Land Maps", d: "View plot locations and boundaries.", tag: "Records", h: 358, href: "maps.html" },
     { t: "Land Cases", d: "Check court cases linked to a plot.", tag: "Legal & Help", h: 164, href: "cases.html" },
-    { t: "FAQ", d: "Answers to common questions.", tag: "Legal & Help", h: 160, href: "faq.html" },
-    { t: "Apply for UniqueID", d: "Apply for your unique ID.", tag: "Services", h: 355, href: "unique-id.html", hot: true }
+    { t: "FAQ", d: "Answers to common questions.", tag: "Legal & Help", h: 160, href: "faq.html" }
   ];
 
   var tags = ["All"],
