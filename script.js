@@ -79,10 +79,10 @@
     { t: "Lease & Settlement", d: "Details of leased and settled land.", tag: "Services", h: 355 },
     { t: "Land Records", d: "Look up official records for a plot.", tag: "Records", h: 160 },
     { t: "Land Tax", d: "Check land tax details and dues.", tag: "Services", h: 350 },
+    { t: "Apply for UniqueID", d: "Apply for your unique ID.", tag: "Services", h: 355, hot: true },
     { t: "Land Documents", d: "View and download your land documents.", tag: "Records", h: 168 },
     { t: "Land Maps", d: "View plot locations and boundaries.", tag: "Records", h: 358 },
     { t: "Land Cases", d: "Check court cases linked to a plot.", tag: "Legal & Help", h: 164 },
-    { t: "Apply for UniqueID", d: "Apply for your unique ID.", tag: "Services", h: 355 },
     { t: "FAQ", d: "Answers to common questions.", tag: "Legal & Help", h: 160 }
   ];
 
@@ -145,6 +145,7 @@
       if (state.q && (p.t + " " + p.d + " " + p.tag).toLowerCase().indexOf(state.q) < 0) return;
       var c = document.createElement("article");
       c.className = "card";
+      if (p.hot) c.className += " hot";
       c.tabIndex = 0;
       c.style.setProperty("--h", p.h);
       var g = document.createElement("span");
